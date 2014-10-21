@@ -7,6 +7,7 @@
             "email": "stevenmaguire@gmail.com"
         }
     ],
+    "license": "MIT",
     "require": {
         "php": ">=5.4.0",
         "stevenmaguire/oauth-shim-php": "dev-master"
