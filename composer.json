@@ -10,7 +10,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
-        "stevenmaguire/oauth-shim-php": "dev-master"
+        "stevenmaguire/oauth-shim-php": ">=0.0.1"
     },
     "autoload": {
         "classmap": [
