@@ -1,0 +1,23 @@
+{
+    "name": "stevenmaguire/yelp-php",
+    "description": "A php client for consumer Yelp API",
+    "authors": [
+        {
+            "name": "Steven Maguire",
+            "email": "stevenmaguire@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "stevenmaguire/oauth-shim-php": "dev-master"
+    },
+    "autoload": {
+        "classmap": [
+            "tests/TestCase.php"
+        ],
+        "psr-0": {
+            "Stevenmaguire\\Yelp\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}

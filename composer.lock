@@ -1,0 +1,57 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "a5c58b63eac352b67d91ae1c982acb4d",
+    "packages": [
+        {
+            "name": "stevenmaguire/oauth-shim-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevenmaguire/oauth-shim-php.git",
+                "reference": "6bf53c66c6bd91a02f13788490ad19757571ff6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevenmaguire/oauth-shim-php/zipball/6bf53c66c6bd91a02f13788490ad19757571ff6e",
+                "reference": "6bf53c66c6bd91a02f13788490ad19757571ff6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "tests/TestCase.php"
+                ],
+                "psr-0": {
+                    "Stevenmaguire\\Oauth\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "Steven Maguire",
+                    "email": "stevenmaguire@gmail.com"
+                }
+            ],
+            "description": "A php shim for Oauth dependancies",
+            "time": "2014-10-21 02:16:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "stevenmaguire/oauth-shim-php": 20
+    },
+    "prefer-stable": false,
+    "platform": {
+        "php": ">=5.4.0"
+    },
+    "platform-dev": []
+}
