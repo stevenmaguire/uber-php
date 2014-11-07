@@ -7,7 +7,7 @@ Installation
 
 Update your `composer.json` file to include:
 
-```php 
+```json 
   "require": {
     ...
     "stevenmaguire/yelp-php": ">=0.0.1"
