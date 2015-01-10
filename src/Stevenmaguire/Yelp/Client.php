@@ -7,17 +7,81 @@ use Stevenmaguire\Oauth\OAuthRequest;
 
 class Client
 {
+    /**
+     * API host url
+     *
+     * @var string
+     */
     private $api_host;
+
+    /**
+     * Consumer key
+     *
+     * @var string
+     */
     private $consumer_key;
+
+    /**
+     * Consumer secret
+     *
+     * @var string
+     */
     private $consumer_secret;
+
+    /**
+     * Access token
+     *
+     * @var string
+     */
     private $token;
+
+    /**
+     * Access token secret
+     *
+     * @var string
+     */
     private $token_secret;
+
+    /**
+     * Default search term
+     *
+     * @var string
+     */
     private $default_term = 'bar';
+
+    /**
+     * Default location
+     *
+     * @var string
+     */
     private $default_location = 'Chicago, IL';
+
+    /**
+     * Default search limit
+     *
+     * @var integer
+     */
     private $search_limit = 3;
+
+    /**
+     * Search path
+     *
+     * @var string
+     */
     private $search_path = '/v2/search/';
+
+    /**
+     * Business path
+     *
+     * @var string
+     */
     private $business_path = '/v2/business/';
 
+    /**
+     * Create new client
+     *
+     * @param array $config
+     */
     public function __construct($config = [])
     {
         $this->consumer_key = $config['consumer_key'];
@@ -27,21 +91,42 @@ class Client
         $this->api_host = $config['api_host'];
     }
 
+    /**
+     * Set default location
+     *
+     * @param string $location
+     *
+     * @return Client
+     */
     public function setDefaultLocation($location)
     {
         $this->default_location = $location;
         return $this;
     }
 
+    /**
+     * Set default term
+     *
+     * @param string $term
+     *
+     * @return Client
+     */
     public function setDefaultTerm($term)
     {
         $this->default_term = $term;
         return $this;
     }
 
+    /**
+     * Set search limit
+     *
+     * @param integer $limit
+     *
+     * @return Client
+     */
     public function setSearchLimit($limit)
     {
-        if (is_numeric($limit)) {
+        if (is_int($limit)) {
             $this->search_limit = $limit;
         }
         return $this;
@@ -52,6 +137,7 @@ class Client
      *
      * @param    $host    The domain host of the API
      * @param    $path    The path of the APi after the domain
+     *
      * @return   The JSON response from the request
      */
     private function request($host, $path)
