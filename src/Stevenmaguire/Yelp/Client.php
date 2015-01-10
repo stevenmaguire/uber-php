@@ -224,14 +224,9 @@ class Client
      */
     private function buildSignedUrl($unsigned_url)
     {
-        // Token object built using the OAuth library
-        $token = new OAuthToken($this->token, $this->token_secret);
-
-        // Consumer object built using the OAuth library
-        $consumer = new OAuthConsumer($this->consumer_key, $this->consumer_secret);
-
-        // Yelp uses HMAC SHA1 encoding
-        $signature_method = new OAuthSignatureMethodHmacSha1();
+        $token = $this->buildtoken();
+        $consumer = $this->buildConsumer();
+        $signature_method = $this->getSignature();
 
         $oauthrequest = OAuthRequest::from_consumer_and_token(
             $consumer,
@@ -240,10 +235,38 @@ class Client
             $unsigned_url
         );
 
-        // Sign the request
         $oauthrequest->sign_request($signature_method, $consumer, $token);
 
-        // Get the signed URL
         return $oauthrequest->to_url();
+    }
+
+    /**
+     * Token object built using the OAuth library
+     *
+     * @return OAuthToken
+     */
+    private function buildToken()
+    {
+        return new OAuthToken($this->token, $this->token_secret);
+    }
+
+    /**
+     * Consumer object built using the OAuth library
+     *
+     * @return OAuthConsumer
+     */
+    private function buildConsumer()
+    {
+        return new OAuthConsumer($this->consumer_key, $this->consumer_secret);
+    }
+
+    /**
+     * Yelp uses HMAC SHA1 encoding
+     *
+     * @return OAuthSignatureMethodHmacSha1
+     */
+    private function getSignature()
+    {
+        return new OAuthSignatureMethodHmacSha1();
     }
 }
