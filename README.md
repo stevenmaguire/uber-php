@@ -49,7 +49,7 @@ $results = $client->search('Sushi', 'Chicago, IL');
 ### Locate details for a specific business by Yelp business id
 
 ```php
-$results = $client->get_business('union-chicago-3');
+$results = $client->getBusiness('union-chicago-3');
 ```
 
 ### Configure defaults

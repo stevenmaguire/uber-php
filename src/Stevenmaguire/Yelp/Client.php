@@ -1,9 +1,9 @@
 <?php namespace Stevenmaguire\Yelp;
 
-use Stevenmaguire\Oauth\OAuthToken,
-    Stevenmaguire\Oauth\OAuthConsumer,
-    Stevenmaguire\Oauth\OAuthSignatureMethodHmacSha1,
-    Stevenmaguire\Oauth\OAuthRequest;
+use Stevenmaguire\Oauth\OAuthToken;
+use Stevenmaguire\Oauth\OAuthConsumer;
+use Stevenmaguire\Oauth\OAuthSignatureMethodHmacSha1;
+use Stevenmaguire\Oauth\OAuthRequest;
 
 class Client
 {
@@ -115,7 +115,7 @@ class Client
      * @param    $business_id    The ID of the business to query
      * @return   The JSON response from the request
      */
-    public function get_business($business_id)
+    public function getBusiness($business_id)
     {
         $business_path = $this->business_path . $business_id;
 
