@@ -29,8 +29,9 @@ class YelpTest extends TestCase
     {
         $term = 'bars';
         $location = 'Chicago, IL';
+        $attributes = ['term' => $term, 'location' => $location];
 
-        $results = $this->client->search($term, $location);
+        $results = $this->client->search($attributes);
 
         $this->assertInstanceOf('stdClass', $results);
         $this->assertNotEmpty($results->businesses);

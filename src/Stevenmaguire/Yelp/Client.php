@@ -133,17 +133,97 @@ class Client
     }
 
     /**
+     * Query the Search API by a search term and location
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function search($attributes = [])
+    {
+        $query_string = $this->buildQueryParams($attributes);
+        $search_path = $this->search_path . "?" . $query_string;
+
+        return $this->request($this->api_host, $search_path);
+    }
+
+    /**
+     * Query the Business API by business_id
+     *
+     * @param    string   $business_id      The ID of the business to query
+     *
+     * @return   stdClass                   The JSON response from the request
+     */
+    public function getBusiness($business_id)
+    {
+        $business_path = $this->business_path . $business_id;
+
+        return $this->request($this->api_host, $business_path);
+    }
+
+    /**
+     * Build query string params using defaults
+     *
+     * @param  array $attributes
+     *
+     * @return string
+     */
+    private function buildQueryParams($attributes = [])
+    {
+        $defaults = array(
+            'term' => $this->default_term,
+            'location' => $this->default_location,
+            'limit' => $this->search_limit
+        );
+        $attributes = array_merge($defaults, $attributes);
+
+        return http_build_query($attributes);
+    }
+
+    /**
      * Makes a request to the Yelp API and returns the response
      *
-     * @param    $host    The domain host of the API
-     * @param    $path    The path of the APi after the domain
+     * @param    string $host    The domain host of the API
+     * @param    string $path    The path of the APi after the domain
      *
-     * @return   The JSON response from the request
+     * @return   stdClass The JSON response from the request
      */
     private function request($host, $path)
     {
-        $unsigned_url = "http://" . $host . $path;
+        $unsigned_url = $this->buildUnsignedUrl($host, $path);
+        $signed_url = $this->buildSignedUrl($unsigned_url);
 
+        $ch = curl_init($signed_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+
+        return json_decode($data);
+    }
+
+    /**
+     * Build unsigned url
+     *
+     * @param  string   $host
+     * @param  string   $path
+     *
+     * @return string   Unsigned url
+     */
+    private function buildUnsignedUrl($host, $path)
+    {
+        return "http://" . $host . $path;
+    }
+
+    /**
+     * Build signed url
+     *
+     * @param  string   $unsigned_url
+     *
+     * @return string   Signed url
+     */
+    private function buildSignedUrl($unsigned_url)
+    {
         // Token object built using the OAuth library
         $token = new OAuthToken($this->token, $this->token_secret);
 
@@ -164,49 +244,6 @@ class Client
         $oauthrequest->sign_request($signature_method, $consumer, $token);
 
         // Get the signed URL
-        $signed_url = $oauthrequest->to_url();
-
-        // Send Yelp API Call
-        $ch = curl_init($signed_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $data = curl_exec($ch);
-        curl_close($ch);
-
-        return json_decode($data);
-    }
-
-    /**
-     * Query the Search API by a search term and location
-     *
-     * @param    $term        The search term passed to the API
-     * @param    $location    The search location passed to the API
-     *
-     * @return   stdClass     The JSON response from the request
-     */
-    public function search($term = null, $location = null)
-    {
-        $url_params = array();
-
-        $url_params['term'] = $term ?: $this->default_term;
-        $url_params['location'] = $location?: $this->default_location;
-        $url_params['limit'] = $this->search_limit;
-        $search_path = $this->search_path . "?" . http_build_query($url_params);
-
-        return $this->request($this->api_host, $search_path);
-    }
-
-    /**
-     * Query the Business API by business_id
-     *
-     * @param    $business_id    The ID of the business to query
-     *
-     * @return   stdClass        The JSON response from the request
-     */
-    public function getBusiness($business_id)
-    {
-        $business_path = $this->business_path . $business_id;
-
-        return $this->request($this->api_host, $business_path);
+        return $oauthrequest->to_url();
     }
 }
