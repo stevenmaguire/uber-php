@@ -43,7 +43,7 @@ Run `composer update`
 ### Search by keyword and location
 
 ```php
-$results = $client->search('Sushi', 'Chicago, IL');
+$results = $client->search(array('term' => 'Sushi', 'location' => 'Chicago, IL'));
 ```
 
 ### Locate details for a specific business by Yelp business id
