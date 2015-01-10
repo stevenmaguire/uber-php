@@ -1,11 +1,11 @@
 # Yelp PHP Client
 
-[![Latest Version](https://img.shields.io/github/release/stevenmaguire/trello-oauth1-server.svg?style=flat-square)](https://github.com/stevenmaguire/trello-oauth1-server/releases)
+[![Latest Version](https://img.shields.io/github/release/stevenmaguire/yelp-php.svg?style=flat-square)](https://github.com/stevenmaguire/yelp-php/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/stevenmaguire/trello-oauth1-server/master.svg?style=flat-square&1)](https://travis-ci.org/stevenmaguire/trello-oauth1-server)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/stevenmaguire/trello-oauth1-server.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/trello-oauth1-server/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/stevenmaguire/trello-oauth1-server.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/trello-oauth1-server)
-[![Total Downloads](https://img.shields.io/packagist/dt/stevenmaguire/trello-oauth1-server.svg?style=flat-square)](https://packagist.org/packages/stevenmaguire/trello-oauth1-server)
+[![Build Status](https://img.shields.io/travis/stevenmaguire/yelp-php/master.svg?style=flat-square&1)](https://travis-ci.org/stevenmaguire/yelp-php)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/stevenmaguire/yelp-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/yelp-php/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/stevenmaguire/yelp-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/yelp-php)
+[![Total Downloads](https://img.shields.io/packagist/dt/stevenmaguire/yelp-php.svg?style=flat-square)](https://packagist.org/packages/stevenmaguire/yelp-php)
 
 A PHP client for authenticating with Yelp using OAuth 1 and consuming the search API.
 
