@@ -173,7 +173,7 @@ class Client
         $data = curl_exec($ch);
         curl_close($ch);
 
-        return $data;
+        return json_decode($data);
     }
 
     /**
@@ -181,9 +181,10 @@ class Client
      *
      * @param    $term        The search term passed to the API
      * @param    $location    The search location passed to the API
-     * @return   The JSON response from the request
+     *
+     * @return   stdClass     The JSON response from the request
      */
-    public function search($term, $location)
+    public function search($term = null, $location = null)
     {
         $url_params = array();
 
@@ -199,7 +200,8 @@ class Client
      * Query the Business API by business_id
      *
      * @param    $business_id    The ID of the business to query
-     * @return   The JSON response from the request
+     *
+     * @return   stdClass        The JSON response from the request
      */
     public function getBusiness($business_id)
     {
