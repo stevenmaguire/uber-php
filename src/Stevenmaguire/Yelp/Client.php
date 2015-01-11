@@ -80,15 +80,17 @@ class Client
     /**
      * Create new client
      *
-     * @param array $config
+     * @param array $configuration
      */
-    public function __construct($config = [])
+    public function __construct($configuration = [])
     {
-        $this->consumer_key = $config['consumer_key'];
-        $this->consumer_secret = $config['consumer_secret'];
-        $this->token = $config['token'];
-        $this->token_secret = $config['token_secret'];
-        $this->api_host = $config['api_host'];
+        $this->parseConfiguration($configuration);
+
+        $this->consumer_key = $configuration['consumer_key'];
+        $this->consumer_secret = $configuration['consumer_secret'];
+        $this->token = $configuration['token'];
+        $this->token_secret = $configuration['token_secret'];
+        $this->api_host = $configuration['api_host'];
     }
 
     /**
@@ -162,6 +164,26 @@ class Client
     }
 
     /**
+     * Parse configuration using defaults
+     *
+     * @param  array $configuration
+     *
+     * @return array $configuration
+     */
+    private function parseConfiguration(&$configuration = [])
+    {
+        $defaults = array(
+            'consumer_key' => null,
+            'consumer_secret' => null,
+            'token' => null,
+            'token_secret' => null,
+            'api_host' => 'api.yelp.com'
+        );
+
+        $configuration = array_merge($defaults, $configuration);
+    }
+
+    /**
      * Build query string params using defaults
      *
      * @param  array $attributes
@@ -197,9 +219,10 @@ class Client
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
         $data = curl_exec($ch);
+        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        return json_decode($data);
+        return $this->parseHttpResponse($http_status, $data);
     }
 
     /**
@@ -269,4 +292,21 @@ class Client
     {
         return new OAuthSignatureMethodHmacSha1();
     }
+
+    /**
+     * Parse response body for problematic status codes
+     *
+     * @param  string $status
+     * @param  string $body
+     *
+     * @return stdClass
+     */
+    private function parseHttpResponse($status, $body)
+    {
+        $body = json_decode($body);
+        if($status === 200) {
+            return $body;
+        }
+        throw new Exception($body->error->text);
+    } // @codeCoverageIgnore
 }

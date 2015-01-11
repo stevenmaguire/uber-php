@@ -7,12 +7,23 @@ class YelpTest extends TestCase
     public function setUp()
     {
         $this->client = new Yelp([
-            'consumer_key' =>       '9pVHHgi4i9-rxR68CGyxOw',
-            'consumer_secret' =>    '5CT8iAq2gx_ESSZ9-qhigTYKuc8',
-            'token' =>              'wMzHE9j1ek2iJL-bcf2SnxC6SPLa1Mza',
-            'token_secret' =>       'TkjSQGeULwu1EXO7Opouw3ahLqA',
+            'consumer_key' =>       getenv('YELP_CONSUMER_KEY'),
+            'consumer_secret' =>    getenv('YELP_CONSUMER_SECRET'),
+            'token' =>              getenv('YELP_ACCESS_TOKEN'),
+            'token_secret' =>       getenv('YELP_ACCESS_TOKEN_SECRET'),
             'api_host' =>           'api.yelp.com'
         ]);
+    }
+
+    /**
+     * @expectedException Stevenmaguire\Yelp\Exception
+     */
+    public function test_It_Will_Fail_With_Invalid_OAuth_Credentials()
+    {
+        $client = new Yelp();
+        $business_id = 'the-motel-bar-chicago';
+
+        $business = $client->getBusiness($business_id);
     }
 
     public function test_It_Can_Find_Business_By_Id()
