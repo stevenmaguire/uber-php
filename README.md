@@ -38,7 +38,6 @@ Run `composer update`
         'api_host' => 'api.yelp.com'
     ));
 ```
-```
 
 ### Search by keyword and location
 
