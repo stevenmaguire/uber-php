@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `yelp-php` will be documented in this file
 
-## NEXT - YYYY-MM-DD
+## NEXT - 2015-01-10
 
 ### Added
 - Business lookup by ID
