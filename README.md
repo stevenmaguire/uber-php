@@ -20,7 +20,7 @@ or update your `composer.json` file to include:
 
 ```json
   "require": {
-    "stevenmaguire/yelp-php": ">=1.0.0"
+    "stevenmaguire/yelp-php": "~1.0"
   }
 ```
 Run `composer update`
