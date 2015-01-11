@@ -304,7 +304,7 @@ class Client
     private function parseHttpResponse($status, $body)
     {
         $body = json_decode($body);
-        if($status === 200) {
+        if ($status === 200) {
             return $body;
         }
         throw new Exception($body->error->text);
