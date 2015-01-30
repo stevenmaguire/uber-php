@@ -1,9 +1,9 @@
 <?php namespace Stevenmaguire\Yelp;
 
-use Stevenmaguire\Oauth\OAuthToken;
-use Stevenmaguire\Oauth\OAuthConsumer;
-use Stevenmaguire\Oauth\OAuthSignatureMethodHmacSha1;
-use Stevenmaguire\Oauth\OAuthRequest;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
 class Client
 {
@@ -146,7 +146,7 @@ class Client
         $query_string = $this->buildQueryParams($attributes);
         $search_path = $this->search_path . "?" . $query_string;
 
-        return $this->request($this->api_host, $search_path);
+        return $this->request($search_path);
     }
 
     /**
@@ -160,7 +160,7 @@ class Client
     {
         $business_path = $this->business_path . $business_id;
 
-        return $this->request($this->api_host, $business_path);
+        return $this->request($business_path);
     }
 
     /**
@@ -205,108 +205,26 @@ class Client
     /**
      * Makes a request to the Yelp API and returns the response
      *
-     * @param    string $host    The domain host of the API
      * @param    string $path    The path of the APi after the domain
      *
      * @return   stdClass The JSON response from the request
      */
-    private function request($host, $path)
+    private function request($path)
     {
-        $unsigned_url = $this->buildUnsignedUrl($host, $path);
-        $signed_url = $this->buildSignedUrl($unsigned_url);
-
-        $ch = curl_init($signed_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $data = curl_exec($ch);
-        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        return $this->parseHttpResponse($http_status, $data);
-    }
-
-    /**
-     * Build unsigned url
-     *
-     * @param  string   $host
-     * @param  string   $path
-     *
-     * @return string   Unsigned url
-     */
-    private function buildUnsignedUrl($host, $path)
-    {
-        return "http://" . $host . $path;
-    }
-
-    /**
-     * Build signed url
-     *
-     * @param  string   $unsigned_url
-     *
-     * @return string   Signed url
-     */
-    private function buildSignedUrl($unsigned_url)
-    {
-        $token = $this->buildtoken();
-        $consumer = $this->buildConsumer();
-        $signature_method = $this->getSignature();
-
-        $oauthrequest = OAuthRequest::from_consumer_and_token(
-            $consumer,
-            $token,
-            'GET',
-            $unsigned_url
-        );
-
-        $oauthrequest->sign_request($signature_method, $consumer, $token);
-
-        return $oauthrequest->to_url();
-    }
-
-    /**
-     * Token object built using the OAuth library
-     *
-     * @return OAuthToken
-     */
-    private function buildToken()
-    {
-        return new OAuthToken($this->token, $this->token_secret);
-    }
-
-    /**
-     * Consumer object built using the OAuth library
-     *
-     * @return OAuthConsumer
-     */
-    private function buildConsumer()
-    {
-        return new OAuthConsumer($this->consumer_key, $this->consumer_secret);
-    }
-
-    /**
-     * Yelp uses HMAC SHA1 encoding
-     *
-     * @return OAuthSignatureMethodHmacSha1
-     */
-    private function getSignature()
-    {
-        return new OAuthSignatureMethodHmacSha1();
-    }
-
-    /**
-     * Parse response body for problematic status codes
-     *
-     * @param  string $status
-     * @param  string $body
-     *
-     * @return stdClass
-     */
-    private function parseHttpResponse($status, $body)
-    {
-        $body = json_decode($body);
-        if ($status === 200) {
+        $client = new HttpClient(['base_url' => 'http://' . $this->api_host]);
+        $oauth = new Oauth1([
+            'consumer_key'    => $this->consumer_key,
+            'consumer_secret' => $this->consumer_secret,
+            'token'           => $this->token,
+            'token_secret'    => $this->token_secret
+        ]);
+        $client->getEmitter()->attach($oauth);
+        try {
+            $response = $client->get($path, ['auth' => 'oauth']);
+            $body = json_decode($response->getBody());
             return $body;
+        } catch (ClientException $e) {
+            throw new Exception($e->getMessage());
         }
-        throw new Exception($body->error->text);
-    } // @codeCoverageIgnore
+    }
 }
