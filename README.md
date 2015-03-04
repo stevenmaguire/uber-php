@@ -72,7 +72,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Credits
 
 - [Steven Maguire](https://github.com/stevenmaguire)
-- [All Contributors](https://github.com/stevenmaguire/trello-php/contributors)
+- [All Contributors](https://github.com/stevenmaguire/yelp-php/contributors)
 
 ## License
 

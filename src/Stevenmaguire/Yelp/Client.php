@@ -145,7 +145,7 @@ class Client
         $query_string = $this->buildQueryParams($attributes);
         $search_path = $this->search_path . "?" . $query_string;
 
-        return $this->request($this->api_host, $search_path);
+        return $this->request($search_path);
     }
 
     /**
@@ -159,7 +159,7 @@ class Client
     {
         $business_path = $this->business_path . $business_id;
 
-        return $this->request($this->api_host, $business_path);
+        return $this->request($business_path);
     }
 
     /**
@@ -204,16 +204,14 @@ class Client
     /**
      * Makes a request to the Yelp API and returns the response
      *
-     * @param    string $host    The domain host of the API
      * @param    string $path    The path of the APi after the domain
      *
      * @return   stdClass The JSON response from the request
      * @throws   Exception
      */
-    private function request($host, $path)
+    private function request($path)
     {
         $client = new HttpClient;
-
         $oauth = new Oauth1([
             'consumer_key'    => $this->consumer_key,
             'consumer_secret' => $this->consumer_secret,
