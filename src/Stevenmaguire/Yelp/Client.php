@@ -220,7 +220,7 @@ class Client
         ]);
 
         $client->getEmitter()->attach($oauth);
-        $url = $this->buildUnsignedUrl($host, $path);
+        $url = $this->buildUnsignedUrl($this->api_host, $path);
 
         try {
             $response = $client->get($url, ['auth' => 'oauth']);
