@@ -1,9 +1,8 @@
 <?php namespace Stevenmaguire\Yelp;
 
-use Stevenmaguire\Oauth\OAuthToken;
-use Stevenmaguire\Oauth\OAuthConsumer;
-use Stevenmaguire\Oauth\OAuthSignatureMethodHmacSha1;
-use Stevenmaguire\Oauth\OAuthRequest;
+use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use GuzzleHttp\Exception\ClientException;
 
 class Client
 {
@@ -209,20 +208,29 @@ class Client
      * @param    string $path    The path of the APi after the domain
      *
      * @return   stdClass The JSON response from the request
+     * @throws   Exception
      */
     private function request($host, $path)
     {
-        $unsigned_url = $this->buildUnsignedUrl($host, $path);
-        $signed_url = $this->buildSignedUrl($unsigned_url);
+        $client = new HttpClient;
 
-        $ch = curl_init($signed_url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        $data = curl_exec($ch);
-        $http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
+        $oauth = new Oauth1([
+            'consumer_key'    => $this->consumer_key,
+            'consumer_secret' => $this->consumer_secret,
+            'token'           => $this->token,
+            'token_secret'    => $this->token_secret
+        ]);
 
-        return $this->parseHttpResponse($http_status, $data);
+        $client->getEmitter()->attach($oauth);
+        $url = $this->buildUnsignedUrl($host, $path);
+
+        try {
+            $response = $client->get($url, ['auth' => 'oauth']);
+        } catch (ClientException $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return json_decode($response->getBody());
     }
 
     /**
@@ -237,76 +245,4 @@ class Client
     {
         return "http://" . $host . $path;
     }
-
-    /**
-     * Build signed url
-     *
-     * @param  string   $unsigned_url
-     *
-     * @return string   Signed url
-     */
-    private function buildSignedUrl($unsigned_url)
-    {
-        $token = $this->buildtoken();
-        $consumer = $this->buildConsumer();
-        $signature_method = $this->getSignature();
-
-        $oauthrequest = OAuthRequest::from_consumer_and_token(
-            $consumer,
-            $token,
-            'GET',
-            $unsigned_url
-        );
-
-        $oauthrequest->sign_request($signature_method, $consumer, $token);
-
-        return $oauthrequest->to_url();
-    }
-
-    /**
-     * Token object built using the OAuth library
-     *
-     * @return OAuthToken
-     */
-    private function buildToken()
-    {
-        return new OAuthToken($this->token, $this->token_secret);
-    }
-
-    /**
-     * Consumer object built using the OAuth library
-     *
-     * @return OAuthConsumer
-     */
-    private function buildConsumer()
-    {
-        return new OAuthConsumer($this->consumer_key, $this->consumer_secret);
-    }
-
-    /**
-     * Yelp uses HMAC SHA1 encoding
-     *
-     * @return OAuthSignatureMethodHmacSha1
-     */
-    private function getSignature()
-    {
-        return new OAuthSignatureMethodHmacSha1();
-    }
-
-    /**
-     * Parse response body for problematic status codes
-     *
-     * @param  string $status
-     * @param  string $body
-     *
-     * @return stdClass
-     */
-    private function parseHttpResponse($status, $body)
-    {
-        $body = json_decode($body);
-        if ($status === 200) {
-            return $body;
-        }
-        throw new Exception($body->error->text);
-    } // @codeCoverageIgnore
 }
