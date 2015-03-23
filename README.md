@@ -31,33 +31,13 @@ Run `composer update`
 
 ```php
     $client = new Stevenmaguire\Uber\Client(array(
-        'consumer_key' => 'YOUR COSUMER KEY',
-        'consumer_secret' => 'YOUR CONSUMER SECRET',
-        'token' => 'YOUR TOKEN',
-        'token_secret' => 'YOUR TOKEN SECRET',
-        'api_host' => 'api.yelp.com'
+        'access_token' => 'YOUR ACCESS TOKEN',
+        'server_token' => 'YOUR SERVER TOKEN',
     ));
-```
-
-### Search by keyword and location
-
-```php
-$results = $client->search(array('term' => 'Sushi', 'location' => 'Chicago, IL'));
-```
-
-### Locate details for a specific business by Uber business id
-
-```php
-$results = $client->getBusiness('union-chicago-3');
 ```
 
 ### Configure defaults
 
-```php
-$client->setDefaultLocation('Chicago, IL')  // default location for all searches if location not provided
-    ->setDefaultTerm('Sushi')               // default keyword for all searches if term not provided
-    ->setSearchLimit(20);                   // number of records to return
-```
 
 ## Testing
 
