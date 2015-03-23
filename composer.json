@@ -1,8 +1,8 @@
 {
-    "name": "stevenmaguire/yelp-php",
-    "description": "A php client for consumer Yelp API",
+    "name": "stevenmaguire/uber-php",
+    "description": "A php client for consumer Uber API",
     "version": "1.0.4",
-    "homepage" : "http://github.com/stevenmaguire/yelp-php",
+    "homepage" : "http://github.com/stevenmaguire/uber-php",
     "authors" : [
         {
             "name" : "Steven Maguire",
@@ -21,16 +21,13 @@
         "classmap": [
             "tests/TestCase.php"
         ],
-        "psr-0": {
-            "Stevenmaguire\\Yelp\\": "src/"
-        },
         "psr-4": {
-            "Stevenmaguire\\Yelp\\": "src/"
+            "Stevenmaguire\\Uber\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Stevenmaguire\\Yelp\\Test\\": "tests/src/"
+            "Stevenmaguire\\Uber\\Test\\": "tests/src/"
         }
     },
     "minimum-stability": "stable"

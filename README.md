@@ -1,26 +1,26 @@
-# Yelp PHP Client
+# Uber PHP Client
 
-[![Latest Version](https://img.shields.io/github/release/stevenmaguire/yelp-php.svg?style=flat-square)](https://github.com/stevenmaguire/yelp-php/releases)
+[![Latest Version](https://img.shields.io/github/release/stevenmaguire/uber-php.svg?style=flat-square)](https://github.com/stevenmaguire/uber-php/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/stevenmaguire/yelp-php/master.svg?style=flat-square&1)](https://travis-ci.org/stevenmaguire/yelp-php)
-[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/stevenmaguire/yelp-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/yelp-php/code-structure)
-[![Quality Score](https://img.shields.io/scrutinizer/g/stevenmaguire/yelp-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/yelp-php)
-[![Total Downloads](https://img.shields.io/packagist/dt/stevenmaguire/yelp-php.svg?style=flat-square)](https://packagist.org/packages/stevenmaguire/yelp-php)
+[![Build Status](https://img.shields.io/travis/stevenmaguire/uber-php/master.svg?style=flat-square&1)](https://travis-ci.org/stevenmaguire/uber-php)
+[![Coverage Status](https://img.shields.io/scrutinizer/coverage/g/stevenmaguire/uber-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/uber-php/code-structure)
+[![Quality Score](https://img.shields.io/scrutinizer/g/stevenmaguire/uber-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/uber-php)
+[![Total Downloads](https://img.shields.io/packagist/dt/stevenmaguire/uber-php.svg?style=flat-square)](https://packagist.org/packages/stevenmaguire/uber-php)
 
-A PHP client for authenticating with Yelp using OAuth 1 and consuming the search API.
+A PHP client for authenticating with Uber using OAuth 2 and consuming the API.
 
 ## Install
 
 Via Composer
 
 ``` bash
-$ composer require stevenmaguire/yelp-php
+$ composer require stevenmaguire/uber-php
 ```
 or update your `composer.json` file to include:
 
 ```json
   "require": {
-    "stevenmaguire/yelp-php": "~1.0"
+    "stevenmaguire/uber-php": "~1.0"
   }
 ```
 Run `composer update`
@@ -30,7 +30,7 @@ Run `composer update`
 ### Create client
 
 ```php
-    $client = new Stevenmaguire\Yelp\Client(array(
+    $client = new Stevenmaguire\Uber\Client(array(
         'consumer_key' => 'YOUR COSUMER KEY',
         'consumer_secret' => 'YOUR CONSUMER SECRET',
         'token' => 'YOUR TOKEN',
@@ -45,7 +45,7 @@ Run `composer update`
 $results = $client->search(array('term' => 'Sushi', 'location' => 'Chicago, IL'));
 ```
 
-### Locate details for a specific business by Yelp business id
+### Locate details for a specific business by Uber business id
 
 ```php
 $results = $client->getBusiness('union-chicago-3');
@@ -72,7 +72,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Credits
 
 - [Steven Maguire](https://github.com/stevenmaguire)
-- [All Contributors](https://github.com/stevenmaguire/yelp-php/contributors)
+- [All Contributors](https://github.com/stevenmaguire/uber-php/contributors)
 
 ## License
 

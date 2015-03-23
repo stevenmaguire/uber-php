@@ -1,5 +1,5 @@
 # Changelog
-All Notable changes to `yelp-php` will be documented in this file
+All Notable changes to `uber-php` will be documented in this file
 
 ## 1.0.5 - 2015-03-05
 

@@ -35,9 +35,9 @@
         </whitelist>
     </filter>
     <php>
-        <env name="YELP_CONSUMER_KEY" value=""/>
-        <env name="YELP_CONSUMER_SECRET" value=""/>
-        <env name="YELP_ACCESS_TOKEN" value=""/>
-        <env name="YELP_ACCESS_TOKEN_SECRET" value=""/>
+        <env name="UBER_ACCESS_TOKEN" value=""/>
+        <env name="UBER_SERVER_TOKEN" value=""/>
+        <env name="UBER_USE_SANDBOX" value=""/>
+        <env name="UBER_VERSION" value=""/>
     </php>
 </phpunit>
