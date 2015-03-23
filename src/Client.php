@@ -50,6 +50,13 @@ class Client
     private $rate_limit = null;
 
     /**
+     * Http client
+     *
+     * @var HttpClient
+     */
+    private $http_client;
+
+    /**
      * Create new client
      *
      * @param array $configuration
@@ -63,6 +70,54 @@ class Client
         $this->use_sandbox = $configuration['use_sandbox'];
         $this->version = $configuration['version'];
         $this->locale = $configuration['locale'];
+
+        $this->http_client = new HttpClient;
+    }
+
+    /**
+     * Cancel a single request
+     *
+     * @param    string   $request_id    Request id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function cancelRequest($request_id)
+    {
+        return $this->request('delete', 'requests/'.$request_id);
+    }
+
+    /**
+     * The User Activity endpoint returns a limited amount of data about a
+     * user's lifetime activity with Uber. The response will include pickup and
+     * dropoff times, the distance of past requests, and information about
+     * which products were requested.
+     *
+     * The history array in the response will have a maximum length based on
+     * the limit parameter. The response value count may exceed limit,
+     * therefore subsequent API requests may be necessary.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getHistory($attributes = [])
+    {
+        return $this->request('get', 'history', $attributes);
+    }
+
+    /**
+     * The Price Estimates endpoint returns an estimated price range for each
+     * product offered at a given location. The price estimate is provided as
+     * a formatted string with the full price range and the localized currency
+     * symbol.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getPriceEstimates($attributes = [])
+    {
+        return $this->request('get', 'estimates/price', $attributes);
     }
 
     /**
@@ -84,13 +139,105 @@ class Client
     }
 
     /**
-     * Get Http client for making requests, and helping tests!
+     * Get a single product
      *
-     * @return HttpClient
+     * @param    string   $product_id    Product id
+     *
+     * @return   stdClass               The JSON response from the request
      */
-    public function getHttpClient()
+    public function getProduct($product_id)
     {
-        return new HttpClient;
+        return $this->request('get', 'products/'.$product_id);
+    }
+
+    /**
+     * The User Profile endpoint returns information about the Uber user that
+     * has authorized with the application.
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getProfile()
+    {
+        return $this->request('get', 'me');
+    }
+
+    /**
+     * The Promotions endpoint returns information about the promotion that
+     * will be available to a new user based on their activity's location.
+     * These promotions do not apply for existing users.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getPromotions($attributes = [])
+    {
+        return $this->request('get', 'promotions', $attributes);
+    }
+
+    /**
+     * Get a single request
+     *
+     * @param    string   $request_id    Request id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getRequest($request_id)
+    {
+        return $this->request('get', 'requests/'.$request_id);
+    }
+
+    /**
+     * Get a single request map
+     *
+     * @param    string   $request_id    Request id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getRequestMap($request_id)
+    {
+        return $this->request('get', 'requests/'.$request_id.'/map');
+    }
+
+    /**
+     * The Time Estimates endpoint returns ETAs for all products offered at a
+     * given location, with the responses expressed as integers in seconds. We
+     * recommend that this endpoint be called every minute to provide the most
+     * accurate, up-to-date ETAs.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getTimeEstimates($attributes = [])
+    {
+        return $this->request('get', 'estimates/time', $attributes);
+    }
+
+    /**
+     * The Request endpoint allows a ride to be requested on behalf of an Uber
+     * user given their desired product, start, and end locations.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function requestRide($attributes = [])
+    {
+        return $this->request('post', 'requests', $attributes);
+    }
+
+    /**
+     * Set Http Client
+     *
+     * @param HttpClient  $client
+     *
+     * @return Client
+     */
+    public function setHttpClient(HttpClient $client)
+    {
+        $this->http_client = $client;
+        return $this;
     }
 
     /**
@@ -139,18 +286,26 @@ class Client
      */
     private function request($verb, $path, $parameters = [])
     {
-        $client = $this->getHttpClient();
+        $client = $this->http_client;
         $url = $this->buildUrl($path);
 
+        $config = [
+            'headers' => [
+                'Authorization' => $this->getAuthorizationHeader(),
+                'Accept-Language' => $this->locale,
+            ]
+        ];
+
+        if (strtolower($verb) == 'get') {
+            $config['query'] = $parameters;
+        } else {
+            $config['json'] = $parameters;
+        }
+
+        $verb = strtolower($verb);
+
         try {
-            $request = $client->createRequest($verb, $url, [
-                'headers' => [
-                    'Authorization' => $this->getAuthorizationHeader(),
-                    'Accept-Language' => $this->locale,
-                ],
-                'query' => $parameters,
-            ]);
-            $response = $client->send($request);
+            $response = $client->$verb($url, $config);
         } catch (HttpClientException $e) {
             throw new Exception($e->getMessage());
         }
@@ -176,7 +331,7 @@ class Client
         $path = ltrim($path, '/');
 
         if ($this->use_sandbox) {
-            return 'https://sandbox-api.uber.com/'.$this->version.'/sandbox/'.$path;
+            return 'https://sandbox-api.uber.com/'.$this->version.'/'.$path;
         }
 
         return 'https://api.uber.com/'.$this->version.'/'.$path;
