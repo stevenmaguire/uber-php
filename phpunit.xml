@@ -39,5 +39,6 @@
         <env name="UBER_SERVER_TOKEN" value=""/>
         <env name="UBER_USE_SANDBOX" value=""/>
         <env name="UBER_VERSION" value=""/>
+        <env name="UBER_LOCALE" value=""/>
     </php>
 </phpunit>

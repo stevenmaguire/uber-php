@@ -1,11 +1,12 @@
 <?php namespace Stevenmaguire\Uber;
 
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Subscriber\Oauth\Oauth1;
-use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ClientException as HttpClientException;
 
 class Client
 {
+    use GetSetTrait;
+
     /**
      * Access token
      *
@@ -35,6 +36,20 @@ class Client
     private $version;
 
     /**
+     * Locale
+     *
+     * @var string
+     */
+    private $locale;
+
+    /**
+     * Rate limit
+     *
+     * @var RateLimit
+     */
+    private $rate_limit = null;
+
+    /**
      * Create new client
      *
      * @param array $configuration
@@ -47,6 +62,7 @@ class Client
         $this->server_token = $configuration['server_token'];
         $this->use_sandbox = $configuration['use_sandbox'];
         $this->version = $configuration['version'];
+        $this->locale = $configuration['locale'];
     }
 
     /**
@@ -68,17 +84,13 @@ class Client
     }
 
     /**
-     * Query the Business API by business_id
+     * Get Http client for making requests, and helping tests!
      *
-     * @param    string   $business_id      The ID of the business to query
-     *
-     * @return   stdClass                   The JSON response from the request
+     * @return HttpClient
      */
-    public function getBusiness($business_id)
+    public function getHttpClient()
     {
-        $business_path = $this->business_path . $business_id;
-
-        return $this->request($business_path);
+        return new HttpClient;
     }
 
     /**
@@ -95,70 +107,78 @@ class Client
             'server_token'  =>  null,
             'use_sandbox'   =>  false,
             'version'   =>  'v1',
+            'locale'    => 'en_US',
         );
 
         return array_merge($defaults, $configuration);
     }
 
     /**
-     * Build query string params using defaults
-     *
-     * @param  array $attributes
+     * Get authorization header value
      *
      * @return string
      */
-    private function buildQueryParams($attributes = [])
+    private function getAuthorizationHeader()
     {
-        $defaults = array(
-            'term' => $this->default_term,
-            'location' => $this->default_location,
-            'limit' => $this->search_limit
-        );
-        $attributes = array_merge($defaults, $attributes);
+        if ($this->access_token) {
+            return 'Bearer '.$this->access_token;
+        }
 
-        return http_build_query($attributes);
+        return 'Token '.$this->server_token;
     }
 
     /**
      * Makes a request to the Uber API and returns the response
      *
-     * @param    string $path    The path of the APi after the domain
+     * @param    string $verb       The Http verb to use
+     * @param    string $path       The path of the APi after the domain
+     * @param    array  $parameters Parameters
      *
      * @return   stdClass The JSON response from the request
      * @throws   Exception
      */
-    private function request($path)
+    private function request($verb, $path, $parameters = [])
     {
-        $client = new HttpClient;
-        $oauth = new Oauth1([
-            'consumer_key'    => $this->consumer_key,
-            'consumer_secret' => $this->consumer_secret,
-            'token'           => $this->token,
-            'token_secret'    => $this->token_secret
-        ]);
-
-        $client->getEmitter()->attach($oauth);
-        $url = $this->buildUnsignedUrl($this->api_host, $path);
+        $client = $this->getHttpClient();
+        $url = $this->buildUrl($path);
 
         try {
-            $response = $client->get($url, ['auth' => 'oauth']);
-        } catch (ClientException $e) {
+            $request = $client->createRequest($verb, $url, [
+                'headers' => [
+                    'Authorization' => $this->getAuthorizationHeader(),
+                    'Accept-Language' => $this->locale,
+                ],
+                'query' => $parameters,
+            ]);
+            $response = $client->send($request);
+        } catch (HttpClientException $e) {
             throw new Exception($e->getMessage());
         }
+
+        $this->rate_limit = new RateLimit(
+            $response->getHeader('X-Rate-Limit-Limit'),
+            $response->getHeader('X-Rate-Limit-Remaining'),
+            $response->getHeader('X-Rate-Limit-Reset')
+        );
 
         return json_decode($response->getBody());
     }
 
     /**
-     * Build unsigned url
+     * Build url
      *
-     * @param  string   $host
      * @param  string   $path
      *
-     * @return string   Unsigned url
+     * @return string   Url
      */
-    private function buildUnsignedUrl($host, $path)
+    private function buildUrl($path)
     {
-        return "http://" . $host . $path;
+        $path = ltrim($path, '/');
+
+        if ($this->use_sandbox) {
+            return 'https://sandbox-api.uber.com/'.$this->version.'/sandbox/'.$path;
+        }
+
+        return 'https://api.uber.com/'.$this->version.'/'.$path;
     }
 }
