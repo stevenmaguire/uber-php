@@ -64,13 +64,7 @@ class Client
     public function __construct($configuration = [])
     {
         $configuration = $this->parseConfiguration($configuration);
-
-        $this->access_token = $configuration['access_token'];
-        $this->server_token = $configuration['server_token'];
-        $this->use_sandbox = $configuration['use_sandbox'];
-        $this->version = $configuration['version'];
-        $this->locale = $configuration['locale'];
-
+        $this->applyConfiguration($configuration);
         $this->http_client = new HttpClient;
     }
 
@@ -269,6 +263,28 @@ class Client
     {
         $this->http_client = $client;
         return $this;
+    }
+
+    /**
+     * Apply configuration
+     *
+     * @param  array $configuration
+     *
+     * @return void
+     */
+    private function applyConfiguration($configuration = [])
+    {
+        array_walk($configuration, function ($value, $key) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        });
+
+        //$this->access_token = $configuration['access_token'];
+        //$this->server_token = $configuration['server_token'];
+        //$this->use_sandbox = $configuration['use_sandbox'];
+        //$this->version = $configuration['version'];
+        //$this->locale = $configuration['locale'];
     }
 
     /**
