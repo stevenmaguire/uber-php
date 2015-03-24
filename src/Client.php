@@ -319,20 +319,8 @@ class Client
     {
         $client = $this->http_client;
         $url = $this->getUrlFromPath($path);
-
-        $config = [
-            'headers' => $this->getHeaders()
-        ];
-
-        if (!empty($parameters)) {
-            if (strtolower($verb) == 'get') {
-                $config['query'] = $parameters;
-            } else {
-                $config['json'] = $parameters;
-            }
-        }
-
         $verb = strtolower($verb);
+        $config = $this->getConfigForVerbAndParameters($verb, $parameters);
 
         try {
             $response = $client->$verb($url, $config);
@@ -347,5 +335,30 @@ class Client
         );
 
         return json_decode($response->getBody());
+    }
+
+    /**
+     * Get HttpClient config for verb and parameters
+     *
+     * @param  string $verb
+     * @param  array  $parameters
+     *
+     * @return array
+     */
+    private function getConfigForVerbAndParameters($verb, $parameters = [])
+    {
+        $config = [
+            'headers' => $this->getHeaders()
+        ];
+
+        if (!empty($parameters)) {
+            if (strtolower($verb) == 'get') {
+                $config['query'] = $parameters;
+            } else {
+                $config['json'] = $parameters;
+            }
+        }
+
+        return $config;
     }
 }
