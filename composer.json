@@ -1,0 +1,37 @@
+{
+    "name": "stevenmaguire/uber-php",
+    "description": "A php client for consumer Uber API",
+    "version": "1.0.0",
+    "homepage" : "http://github.com/stevenmaguire/uber-php",
+    "authors" : [
+        {
+            "name" : "Steven Maguire",
+            "email" : "stevenmaguire@gmail.com",
+            "homepage" : "http://stevenmaguire.com",
+            "role" : "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.4.0",
+        "guzzlehttp/guzzle": "~5.2"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stevenmaguire\\Uber\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stevenmaguire\\Uber\\Test\\": "tests/src/"
+        }
+    },
+    "suggest": {
+        "stevenmaguire/oauth2-uber": "Making it simple to integrate your application with Uber using OAuth 2.0"
+    },
+    "minimum-stability": "stable"
+}
