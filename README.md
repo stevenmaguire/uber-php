@@ -33,9 +33,9 @@ Run `composer update`
 $client = new Stevenmaguire\Uber\Client(array(
     'access_token' => 'YOUR ACCESS TOKEN',
     'server_token' => 'YOUR SERVER TOKEN',
-    'use_sandbox'  =>  true, // optional, default false
-    'version'      =>  'v1', // optional, default 'v1'
-    'locale'       =>  'en_US', // optional, default 'en_US'
+    'use_sandbox'  => true, // optional, default false
+    'version'      => 'v1', // optional, default 'v1'
+    'locale'       => 'en_US', // optional, default 'en_US'
 ));
 ```
 *Please review the [Sandbox](https://developer.uber.com/v1/sandbox/) documentation on how to develop and test against these endpoints without making real-world Requests and being charged.*
