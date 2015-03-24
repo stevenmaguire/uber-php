@@ -7,7 +7,9 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/stevenmaguire/uber-php.svg?style=flat-square)](https://scrutinizer-ci.com/g/stevenmaguire/uber-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/stevenmaguire/uber-php.svg?style=flat-square)](https://packagist.org/packages/stevenmaguire/uber-php)
 
-A PHP client for authenticating with Uber using OAuth 2 and consuming the API.
+A PHP client for authenticating with Uber using OAuth 2.0 and consuming the API.
+
+*This package is intended to be used for communicating with the Uber API after you've secured an access token from your users. To authenticate users and retrieve access tokens, use [stevenmaguire/oauth2-uber](https://github.com/stevenmaguire/oauth2-uber).*
 
 ## Install
 

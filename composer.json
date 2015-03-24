@@ -1,6 +1,6 @@
 {
     "name": "stevenmaguire/uber-php",
-    "description": "A php client for consumer Uber API",
+    "description": "A php client for consuming the Uber API",
     "version": "1.0.0",
     "homepage" : "http://github.com/stevenmaguire/uber-php",
     "authors" : [
@@ -10,6 +10,12 @@
             "homepage" : "http://stevenmaguire.com",
             "role" : "Developer"
         }
+    ],
+    "keywords": [
+        "api",
+        "oauth2",
+        "uber",
+        "php"
     ],
     "license": "MIT",
     "require": {
