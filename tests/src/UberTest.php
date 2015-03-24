@@ -48,6 +48,75 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $client->getNonExistentProperty();
     }
 
+    public function test_Url_Includes_Version()
+    {
+        $version = uniqid();
+        $this->client->setVersion($version);
+
+        $url = $this->client->getUrlFromPath('/');
+
+        $this->assertContains($version, $url);
+    }
+
+    public function test_Url_Omits_Version_When_Not_Provided()
+    {
+        $this->client->setVersion(null);
+
+        $url = $this->client->getUrlFromPath('/');
+
+        $this->assertStringEndsNotWith('//', $url);
+    }
+
+    public function test_Headers_Include_Bearer_When_Access_Token_Provided()
+    {
+        $access_token = uniqid();
+        $this->client->setAccessToken($access_token);
+
+        $headers = $this->client->getHeaders();
+
+        $this->assertTrue(in_array('Authorization', array_keys($headers)));
+        $this->assertEquals('Bearer '.$access_token, $headers['Authorization']);
+    }
+
+    public function test_Headers_Include_Token_When_Access_Token_Not_Provided()
+    {
+        $server_token = uniqid();
+        $this->client->setServerToken($server_token)->setAccessToken(null);
+
+        $headers = $this->client->getHeaders();
+
+        $this->assertTrue(in_array('Authorization', array_keys($headers)));
+        $this->assertEquals('Token '.$server_token, $headers['Authorization']);
+    }
+
+    public function test_Headers_Include_Empty_Token_When_Access_And_Server_Token_Not_Provided()
+    {
+        $this->client->setServerToken(null)->setAccessToken(null);
+
+        $headers = $this->client->getHeaders();
+
+        $this->assertTrue(in_array('Authorization', array_keys($headers)));
+        $this->assertEquals('Token', $headers['Authorization']);
+    }
+
+    public function test_Headers_Include_AcceptLanguage_When_Locale_Provided()
+    {
+        $locale = $this->client->getLocale();
+
+        $headers = $this->client->getHeaders();
+
+        $this->assertTrue(in_array('Accept-Language', array_keys($headers)));
+        $this->assertEquals($locale, $headers['Accept-Language']);
+    }
+
+    public function test_Headers_Include_Empty_AcceptLanguage_When_Locale_Not_Provided()
+    {
+        $headers = $this->client->setLocale(null)->getHeaders();
+
+        $this->assertTrue(in_array('Accept-Language', array_keys($headers)));
+        $this->assertEmpty($headers['Accept-Language']);
+    }
+
     public function test_Get_Products()
     {
         $params = [

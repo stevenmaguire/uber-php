@@ -229,8 +229,8 @@ class Client
     public function getHeaders()
     {
         return [
-            'Authorization' => $this->getAuthorizationHeader(),
-            'Accept-Language' => $this->locale,
+            'Authorization' => trim($this->getAuthorizationHeader()),
+            'Accept-Language' => trim($this->locale),
         ];
     }
 
@@ -245,11 +245,9 @@ class Client
     {
         $path = ltrim($path, '/');
 
-        if ($this->use_sandbox) {
-            return 'https://sandbox-api.uber.com/'.$this->version.'/'.$path;
-        }
+        $host = 'https://'.($this->use_sandbox ? 'sandbox-' : '').'api.uber.com';
 
-        return 'https://api.uber.com/'.$this->version.'/'.$path;
+        return $host.($this->version ? '/'.$this->version : '').'/'.$path;
     }
 
     /**
