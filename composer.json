@@ -11,6 +11,12 @@
             "role" : "Developer"
         }
     ],
+    "keywords": [
+        "api",
+        "oauth2",
+        "uber",
+        "php"
+    ],
     "license": "MIT",
     "require": {
         "php": ">=5.4.0",
