@@ -279,12 +279,6 @@ class Client
                 $this->$key = $value;
             }
         });
-
-        //$this->access_token = $configuration['access_token'];
-        //$this->server_token = $configuration['server_token'];
-        //$this->use_sandbox = $configuration['use_sandbox'];
-        //$this->version = $configuration['version'];
-        //$this->locale = $configuration['locale'];
     }
 
     /**

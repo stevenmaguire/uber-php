@@ -19,6 +19,35 @@ class UberTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
+    public function test_Configuration()
+    {
+        $client = new Uber([
+            'access_token'  =>  getenv('UBER_ACCESS_TOKEN'),
+            'server_token'  =>  getenv('UBER_SERVER_TOKEN'),
+            'use_sandbox'   =>  getenv('UBER_USE_SANDBOX'),
+            'version'       =>  getenv('UBER_VERSION'),
+            'locale'        =>  getenv('UBER_LOCALE'),
+        ]);
+
+        $this->assertEquals($client->getAccessToken(), getenv('UBER_ACCESS_TOKEN'));
+        $this->assertEquals($client->getServerToken(), getenv('UBER_SERVER_TOKEN'));
+        $this->assertEquals($client->getUseSandbox(), getenv('UBER_USE_SANDBOX'));
+        $this->assertEquals($client->getVersion(), getenv('UBER_VERSION'));
+        $this->assertEquals($client->getLocale(), getenv('UBER_LOCALE'));
+    }
+
+    /**
+     * @expectedException Stevenmaguire\Uber\Exception
+     */
+    public function test_Configuration_Will_Not_Accept_Non_Property_Config()
+    {
+        $client = new Uber([
+            'non_existent_property'  =>  'test',
+        ]);
+
+        $client->getNonExistentProperty();
+    }
+
     public function test_Get_Products()
     {
         $params = [
@@ -40,6 +69,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $products = $this->client->getProducts($params);
+        $this->assertNull($this->client->getAccessToken());
     }
 
     public function test_Get_Product()
