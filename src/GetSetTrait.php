@@ -9,16 +9,15 @@ trait GetSetTrait
             if (property_exists($this, $property)) {
                 return $this->$property;
             }
-        }
-
-        if ($this->isSetMethod($method)) {
+        } elseif ($this->isSetMethod($method)) {
             $property = $this->convertMethodToProperty($method);
             if (property_exists($this, $property)) {
-                return $this->$property = $parameters[0];
+                $this->$property = $parameters[0];
+                return $this;
             }
-        }
+        } // @codeCoverageIgnore
 
-        return call_user_func_array([$this, $method], $parameters);
+        throw new Exception('Method not implemented');
     }
 
     public function isGetMethod($method)

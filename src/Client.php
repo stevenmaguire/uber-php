@@ -228,6 +228,37 @@ class Client
     }
 
     /**
+     * Get headers for request
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return [
+            'Authorization' => $this->getAuthorizationHeader(),
+            'Accept-Language' => $this->locale,
+        ];
+    }
+
+    /**
+     * Build url
+     *
+     * @param  string   $path
+     *
+     * @return string   Url
+     */
+    public function getUrlFromPath($path)
+    {
+        $path = ltrim($path, '/');
+
+        if ($this->use_sandbox) {
+            return 'https://sandbox-api.uber.com/'.$this->version.'/'.$path;
+        }
+
+        return 'https://api.uber.com/'.$this->version.'/'.$path;
+    }
+
+    /**
      * Set Http Client
      *
      * @param HttpClient  $client
@@ -287,19 +318,18 @@ class Client
     private function request($verb, $path, $parameters = [])
     {
         $client = $this->http_client;
-        $url = $this->buildUrl($path);
+        $url = $this->getUrlFromPath($path);
 
         $config = [
-            'headers' => [
-                'Authorization' => $this->getAuthorizationHeader(),
-                'Accept-Language' => $this->locale,
-            ]
+            'headers' => $this->getHeaders()
         ];
 
-        if (strtolower($verb) == 'get') {
-            $config['query'] = $parameters;
-        } else {
-            $config['json'] = $parameters;
+        if (!empty($parameters)) {
+            if (strtolower($verb) == 'get') {
+                $config['query'] = $parameters;
+            } else {
+                $config['json'] = $parameters;
+            }
         }
 
         $verb = strtolower($verb);
@@ -317,23 +347,5 @@ class Client
         );
 
         return json_decode($response->getBody());
-    }
-
-    /**
-     * Build url
-     *
-     * @param  string   $path
-     *
-     * @return string   Url
-     */
-    private function buildUrl($path)
-    {
-        $path = ltrim($path, '/');
-
-        if ($this->use_sandbox) {
-            return 'https://sandbox-api.uber.com/'.$this->version.'/'.$path;
-        }
-
-        return 'https://api.uber.com/'.$this->version.'/'.$path;
     }
 }
