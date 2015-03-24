@@ -1,31 +1,12 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
-## 1.0.5 - 2015-03-05
+## 1.0.0 - 2015-03-24
 
 ### Added
-- Switched OAuth1 support from native cURL to Guzzle and its OAuth1 Subscriber plugin
-
-### Deprecated
-- Nothing
-
-### Fixed
-- Nothing
-
-### Removed
-- Nothing
-
-### Security
-- Nothing
-
-## 1.0.0 - 2015-01-10
-
-### Added
-- Business lookup by ID
-- Search by term and location
-- Set default term
-- Set default location
-- Set search record limit
+- Uber API v1 and v1.1 Support
+- Toggle Sandbox mode
+- Check status of rate limiting
 
 ### Deprecated
 - Nothing
