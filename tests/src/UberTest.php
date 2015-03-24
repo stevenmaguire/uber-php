@@ -40,6 +40,8 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $products = $this->client->getProducts($params);
+
+        print_r($this->client->getRateLimit());
     }
 
     public function test_Get_Product()
