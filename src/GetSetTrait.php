@@ -6,18 +6,26 @@ trait GetSetTrait
     {
         if ($this->isGetMethod($method)) {
             $property = $this->convertMethodToProperty($method);
+
             if (property_exists($this, $property)) {
                 return $this->$property;
             }
         } elseif ($this->isSetMethod($method)) {
             $property = $this->convertMethodToProperty($method);
-            if (property_exists($this, $property)) {
-                $this->$property = $parameters[0];
-                return $this;
-            }
+
+            return $this->updateAttribute($property, $parameters[0]);
         } // @codeCoverageIgnore
 
         throw new Exception('Method not implemented');
+    }
+
+    private function updateAttribute($attribute, $value)
+    {
+        if (property_exists($this, $attribute)) {
+            $this->$attribute = $value;
+        }
+
+        return $this;
     }
 
     public function isGetMethod($method)

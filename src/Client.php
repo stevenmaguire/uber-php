@@ -273,9 +273,7 @@ class Client
     private function applyConfiguration($configuration = [])
     {
         array_walk($configuration, function ($value, $key) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
+            $this->updateAttribute($key, $value);
         });
     }
 
