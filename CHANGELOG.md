@@ -1,6 +1,24 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.1.0 - 2015-05-21
+
+### Added
+- Improved handling of HTTP Errors from Uber API
+- Added ability to get HTTP Error response body from exception; helpful in "surge confirmation" flow.
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.0.0 - 2015-03-24
 
 ### Added
