@@ -331,7 +331,15 @@ class Client
         try {
             $response = $client->$verb($url, $config);
         } catch (HttpClientException $e) {
-            throw new Exception($e->getMessage());
+
+            if ($response = $e->getResponse()) {
+                $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
+                $exception->setBody($response->json());
+
+                throw $exception;
+            }
+
+            throw new Exception($e->getMessage(), 500, $e);
         }
 
         $this->rate_limit = new RateLimit(

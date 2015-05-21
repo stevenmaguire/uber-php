@@ -4,7 +4,8 @@ use Stevenmaguire\Uber\Client as Uber;
 use Mockery as m;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Message\MessageFactory;
+use GuzzleHttp\Exception\ClientException as HttpClientException;
 
 class UberTest extends \PHPUnit_Framework_TestCase
 {
@@ -382,11 +383,13 @@ class UberTest extends \PHPUnit_Framework_TestCase
     public function test_Throws_Exception_On_Http_Errors()
     {
         $params = [];
+        $responseCode = 429;
+        $responseHeaders = ['Content-Length' => 0];
 
-        $mock = new Mock([
-            new Response(429),         // Use response object
-            "HTTP/1.1 429 Not Accepted\r\nContent-Length: 0\r\n\r\n"  // Use a response string
-        ]);
+        $factory = new MessageFactory;
+        $response = $factory->createResponse($responseCode, $responseHeaders);
+
+        $mock = new Mock([$response]);
 
         $http_client = new HttpClient;
         $http_client->getEmitter()->attach($mock);
@@ -394,5 +397,55 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $products = $this->client->getProducts($params);
+    }
+
+    public function test_Http_Exceptions_Include_Meta_From_Uber()
+    {
+        $params = [];
+        $responseCode = 409;
+        $responseReason = "Conflict";
+        $responsePayload = '{"meta":{"surge_confirmation":{"href":"https:\/\/api.uber.com\/v1\/surge-confirmations\/e100a670","surge_confirmation_id":"e100a670"}},"errors":[{"status":'.$responseCode.',"code":"surge","title":"Surge pricing is currently in effect for this product."}]}';
+        $responseHeaders = [
+            "Content-Type" => "application/json; charset=UTF-8",
+            "Content-Length" => strlen($responsePayload),
+            "Accept" => "application/json"
+        ];
+
+        $factory = new MessageFactory;
+        $response = $factory->createResponse($responseCode, $responseHeaders, $responsePayload);
+
+        $mock = new Mock([$response]);
+
+        $http_client = new HttpClient;
+        $http_client->getEmitter()->attach($mock);
+
+        $this->client->setHttpClient($http_client);
+
+        try {
+            $products = $this->client->getProducts($params);
+        } catch (\Stevenmaguire\Uber\Exception $e) {
+            $this->assertContains($responseReason, $e->getMessage());
+            $this->assertEquals($responseCode, $e->getCode());
+            $this->assertEquals($responsePayload, json_encode($e->getBody()));
+        }
+    }
+
+    public function test_Client_Exceptions_Throw_Uber_Exception()
+    {
+        $params = [];
+        $exception = new HttpClientException(
+            uniqid(),
+            m::mock('GuzzleHttp\Message\RequestInterface')
+        );
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')->times(1)->andThrow($exception);
+
+        $this->client->setHttpClient($http_client);
+
+        try {
+            $products = $this->client->getProducts($params);
+        } catch (\Stevenmaguire\Uber\Exception $e) {
+            $this->assertEquals(500, $e->getCode());
+        }
     }
 }
