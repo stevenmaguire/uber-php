@@ -22,7 +22,7 @@ or update your `composer.json` file to include:
 
 ```json
   "require": {
-    "stevenmaguire/uber-php": "~1.0"
+    "stevenmaguire/uber-php": "~1.1"
   }
 ```
 Run `composer update`
