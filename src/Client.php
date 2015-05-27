@@ -2,6 +2,7 @@
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as HttpClientException;
+use GuzzleHttp\Message\Response;
 
 class Client
 {
@@ -278,26 +279,6 @@ class Client
     }
 
     /**
-     * Parse configuration using defaults
-     *
-     * @param  array $configuration
-     *
-     * @return array $configuration
-     */
-    private function parseConfiguration($configuration = [])
-    {
-        $defaults = array(
-            'access_token'  =>  null,
-            'server_token'  =>  null,
-            'use_sandbox'   =>  false,
-            'version'   =>  'v1',
-            'locale'    => 'en_US',
-        );
-
-        return array_merge($defaults, $configuration);
-    }
-
-    /**
      * Get authorization header value
      *
      * @return string
@@ -309,45 +290,6 @@ class Client
         }
 
         return 'Token '.$this->server_token;
-    }
-
-    /**
-     * Makes a request to the Uber API and returns the response
-     *
-     * @param    string $verb       The Http verb to use
-     * @param    string $path       The path of the APi after the domain
-     * @param    array  $parameters Parameters
-     *
-     * @return   stdClass The JSON response from the request
-     * @throws   Exception
-     */
-    private function request($verb, $path, $parameters = [])
-    {
-        $client = $this->http_client;
-        $url = $this->getUrlFromPath($path);
-        $verb = strtolower($verb);
-        $config = $this->getConfigForVerbAndParameters($verb, $parameters);
-
-        try {
-            $response = $client->$verb($url, $config);
-        } catch (HttpClientException $e) {
-            if ($response = $e->getResponse()) {
-                $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
-                $exception->setBody($response->json());
-
-                throw $exception;
-            }
-
-            throw new Exception($e->getMessage(), 500, $e);
-        }
-
-        $this->rate_limit = new RateLimit(
-            $response->getHeader('X-Rate-Limit-Limit'),
-            $response->getHeader('X-Rate-Limit-Remaining'),
-            $response->getHeader('X-Rate-Limit-Reset')
-        );
-
-        return json_decode($response->getBody());
     }
 
     /**
@@ -373,5 +315,90 @@ class Client
         }
 
         return $config;
+    }
+
+
+    /**
+     * Handle http client exceptions
+     *
+     * @param  HttpClientException $e
+     *
+     * @return void
+     * @throws Exception
+     */
+    private function handleRequestException(HttpClientException $e)
+    {
+        if ($response = $e->getResponse()) {
+            $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
+            $exception->setBody($response->json());
+
+            throw $exception;
+        }
+
+        throw new Exception($e->getMessage(), 500, $e);
+    }
+
+    /**
+     * Makes a request to the Uber API and returns the response
+     *
+     * @param    string $verb       The Http verb to use
+     * @param    string $path       The path of the APi after the domain
+     * @param    array  $parameters Parameters
+     *
+     * @return   stdClass The JSON response from the request
+     * @throws   Exception
+     */
+    private function request($verb, $path, $parameters = [])
+    {
+        $client = $this->http_client;
+        $url = $this->getUrlFromPath($path);
+        $verb = strtolower($verb);
+        $config = $this->getConfigForVerbAndParameters($verb, $parameters);
+
+        try {
+            $response = $client->$verb($url, $config);
+        } catch (HttpClientException $e) {
+            $this->handleRequestException($e);
+        }
+
+        $this->parseRateLimitFromResponse($response);
+
+        return json_decode($response->getBody());
+    }
+
+    /**
+     * Parse configuration using defaults
+     *
+     * @param  array $configuration
+     *
+     * @return array $configuration
+     */
+    private function parseConfiguration($configuration = [])
+    {
+        $defaults = array(
+            'access_token'  =>  null,
+            'server_token'  =>  null,
+            'use_sandbox'   =>  false,
+            'version'   =>  'v1',
+            'locale'    => 'en_US',
+        );
+
+        return array_merge($defaults, $configuration);
+    }
+
+    /**
+     * Attempt to pull rate limit headers from response and add to client
+     *
+     * @param  Response  $response
+     *
+     * @return void
+     */
+    private function parseRateLimitFromResponse(Response $response)
+    {
+        $this->rate_limit = new RateLimit(
+            $response->getHeader('X-Rate-Limit-Limit'),
+            $response->getHeader('X-Rate-Limit-Remaining'),
+            $response->getHeader('X-Rate-Limit-Reset')
+        );
     }
 }
