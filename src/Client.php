@@ -331,7 +331,6 @@ class Client
         try {
             $response = $client->$verb($url, $config);
         } catch (HttpClientException $e) {
-
             if ($response = $e->getResponse()) {
                 $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
                 $exception->setBody($response->json());
