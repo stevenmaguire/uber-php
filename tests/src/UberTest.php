@@ -353,6 +353,44 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($locale, getenv('UBER_LOCALE'));
     }
 
+    public function test_Set_Request()
+    {
+        $request_id = 'mock_request_id';
+        $request_body = ['status' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/sandbox/requests/'.$request_id), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setRequest($request_id, $request_body);
+    }
+
+    public function test_Set_Product()
+    {
+        $product_id = 'mock_request_id';
+        $request_body = ['surge_multiplier' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/sandbox/products/'.$product_id), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setProduct($product_id, $request_body);
+    }
+
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */

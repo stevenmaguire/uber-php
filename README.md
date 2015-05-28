@@ -127,8 +127,28 @@ $request = $client->requestRide(array(
     'start_latitude' => '41.85582993',
     'start_longitude' => '-87.62730337',
     'end_latitude' => '41.87499492',
-    'end_longitude' => '-87.67126465'
+    'end_longitude' => '-87.67126465',
+    'surge_confirmation_id' => 'e100a670' // Optional
 ));
+```
+
+#### Surge Confirmation Flow
+
+If the ride request is using a product that has a surge multiplier, the API wrapper will throw an Exception and provide a response body that includes a surge confirmation ID.
+
+```php
+try {
+    $request = $client->requestRide(array(
+        'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
+        'start_latitude' => '41.85582993',
+        'start_longitude' => '-87.62730337',
+        'end_latitude' => '41.87499492',
+        'end_longitude' => '-87.67126465'
+    ));
+} catch (Stevenmaguire\Uber\Exception $e) {
+    $body = $e->getBody();
+    $surgeConfirmationId = $body['meta']['surge_confirmation']['surge_confirmation_id'];
+}
 ```
 
 [https://developer.uber.com/v1/endpoints/#request](https://developer.uber.com/v1/endpoints/#request)
@@ -175,6 +195,33 @@ $rate_limit->getReset();        // Timestamp in UTC time when the next period wi
 These values will update after each request. `getRateLimit` will return null after the client is created and before the first successful request.
 
 [https://developer.uber.com/v1/api-reference/#rate-limiting](https://developer.uber.com/v1/api-reference/#rate-limiting)
+
+### Using the Sandbox
+
+Modify the status of an ongoing sandbox Request.
+
+```php
+$request = $client->requestRide(array(
+    'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
+    'start_latitude' => '41.85582993',
+    'start_longitude' => '-87.62730337',
+    'end_latitude' => '41.87499492',
+    'end_longitude' => '-87.67126465'
+));
+
+$updateRequest = $client->setRequest($request->request_id, ['status' => 'accepted']);
+```
+[https://developer.uber.com/v1/sandbox/#request](https://developer.uber.com/v1/sandbox/#request)
+
+Simulate the possible responses the Request endpoint will return when requesting a particular product, such as surge pricing, against the Sandbox.
+
+```php
+$product = $client->getProduct($product_id);
+
+$updateProduct = $client->setProduct($product_id, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
+```
+
+[https://developer.uber.com/v1/sandbox/#product-types](https://developer.uber.com/v1/sandbox/#product-types)
 
 ## Testing
 

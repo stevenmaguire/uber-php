@@ -70,6 +70,20 @@ class Client
     }
 
     /**
+     * Apply configuration
+     *
+     * @param  array $configuration
+     *
+     * @return void
+     */
+    private function applyConfiguration($configuration = [])
+    {
+        array_walk($configuration, function ($value, $key) {
+            $this->updateAttribute($key, $value);
+        });
+    }
+
+    /**
      * Cancel a single request
      *
      * @param    string   $request_id    Request id
@@ -79,6 +93,58 @@ class Client
     public function cancelRequest($request_id)
     {
         return $this->request('delete', 'requests/'.$request_id);
+    }
+
+    /**
+     * Get authorization header value
+     *
+     * @return string
+     */
+    private function getAuthorizationHeader()
+    {
+        if ($this->access_token) {
+            return 'Bearer '.$this->access_token;
+        }
+
+        return 'Token '.$this->server_token;
+    }
+
+    /**
+     * Get HttpClient config for verb and parameters
+     *
+     * @param  string $verb
+     * @param  array  $parameters
+     *
+     * @return array
+     */
+    private function getConfigForVerbAndParameters($verb, $parameters = [])
+    {
+        $config = [
+            'headers' => $this->getHeaders()
+        ];
+
+        if (!empty($parameters)) {
+            if (strtolower($verb) == 'get') {
+                $config['query'] = $parameters;
+            } else {
+                $config['json'] = $parameters;
+            }
+        }
+
+        return $config;
+    }
+
+    /**
+     * Get headers for request
+     *
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return [
+            'Authorization' => trim($this->getAuthorizationHeader()),
+            'Accept-Language' => trim($this->locale),
+        ];
     }
 
     /**
@@ -210,32 +276,6 @@ class Client
     }
 
     /**
-     * The Request endpoint allows a ride to be requested on behalf of an Uber
-     * user given their desired product, start, and end locations.
-     *
-     * @param    array    $attributes   Query attributes
-     *
-     * @return   stdClass               The JSON response from the request
-     */
-    public function requestRide($attributes = [])
-    {
-        return $this->request('post', 'requests', $attributes);
-    }
-
-    /**
-     * Get headers for request
-     *
-     * @return array
-     */
-    public function getHeaders()
-    {
-        return [
-            'Authorization' => trim($this->getAuthorizationHeader()),
-            'Accept-Language' => trim($this->locale),
-        ];
-    }
-
-    /**
      * Build url
      *
      * @param  string   $path
@@ -250,73 +290,6 @@ class Client
 
         return $host.($this->version ? '/'.$this->version : '').'/'.$path;
     }
-
-    /**
-     * Set Http Client
-     *
-     * @param HttpClient  $client
-     *
-     * @return Client
-     */
-    public function setHttpClient(HttpClient $client)
-    {
-        $this->http_client = $client;
-        return $this;
-    }
-
-    /**
-     * Apply configuration
-     *
-     * @param  array $configuration
-     *
-     * @return void
-     */
-    private function applyConfiguration($configuration = [])
-    {
-        array_walk($configuration, function ($value, $key) {
-            $this->updateAttribute($key, $value);
-        });
-    }
-
-    /**
-     * Get authorization header value
-     *
-     * @return string
-     */
-    private function getAuthorizationHeader()
-    {
-        if ($this->access_token) {
-            return 'Bearer '.$this->access_token;
-        }
-
-        return 'Token '.$this->server_token;
-    }
-
-    /**
-     * Get HttpClient config for verb and parameters
-     *
-     * @param  string $verb
-     * @param  array  $parameters
-     *
-     * @return array
-     */
-    private function getConfigForVerbAndParameters($verb, $parameters = [])
-    {
-        $config = [
-            'headers' => $this->getHeaders()
-        ];
-
-        if (!empty($parameters)) {
-            if (strtolower($verb) == 'get') {
-                $config['query'] = $parameters;
-            } else {
-                $config['json'] = $parameters;
-            }
-        }
-
-        return $config;
-    }
-
 
     /**
      * Handle http client exceptions
@@ -336,34 +309,6 @@ class Client
         }
 
         throw new Exception($e->getMessage(), 500, $e);
-    }
-
-    /**
-     * Makes a request to the Uber API and returns the response
-     *
-     * @param    string $verb       The Http verb to use
-     * @param    string $path       The path of the APi after the domain
-     * @param    array  $parameters Parameters
-     *
-     * @return   stdClass The JSON response from the request
-     * @throws   Exception
-     */
-    private function request($verb, $path, $parameters = [])
-    {
-        $client = $this->http_client;
-        $url = $this->getUrlFromPath($path);
-        $verb = strtolower($verb);
-        $config = $this->getConfigForVerbAndParameters($verb, $parameters);
-
-        try {
-            $response = $client->$verb($url, $config);
-        } catch (HttpClientException $e) {
-            $this->handleRequestException($e);
-        }
-
-        $this->parseRateLimitFromResponse($response);
-
-        return json_decode($response->getBody());
     }
 
     /**
@@ -400,5 +345,85 @@ class Client
             $response->getHeader('X-Rate-Limit-Remaining'),
             $response->getHeader('X-Rate-Limit-Reset')
         );
+    }
+
+    /**
+     * Makes a request to the Uber API and returns the response
+     *
+     * @param    string $verb       The Http verb to use
+     * @param    string $path       The path of the APi after the domain
+     * @param    array  $parameters Parameters
+     *
+     * @return   stdClass The JSON response from the request
+     * @throws   Exception
+     */
+    private function request($verb, $path, $parameters = [])
+    {
+        $client = $this->http_client;
+        $url = $this->getUrlFromPath($path);
+        $verb = strtolower($verb);
+        $config = $this->getConfigForVerbAndParameters($verb, $parameters);
+
+        try {
+            $response = $client->$verb($url, $config);
+        } catch (HttpClientException $e) {
+            $this->handleRequestException($e);
+        }
+
+        $this->parseRateLimitFromResponse($response);
+
+        return json_decode($response->getBody());
+    }
+
+    /**
+     * The Request endpoint allows a ride to be requested on behalf of an Uber
+     * user given their desired product, start, and end locations.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function requestRide($attributes = [])
+    {
+        return $this->request('post', 'requests', $attributes);
+    }
+
+    /**
+     * Set Http Client
+     *
+     * @param HttpClient  $client
+     *
+     * @return Client
+     */
+    public function setHttpClient(HttpClient $client)
+    {
+        $this->http_client = $client;
+        return $this;
+    }
+
+    /**
+     * Set product properties for sandbox responses
+     *
+     * @param string $product_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setProduct($product_id, $attributes = [])
+    {
+        return $this->request('put', 'sandbox/products/'.$product_id, $attributes);
+    }
+
+    /**
+     * Set request properties for sandbox responses
+     *
+     * @param string $request_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setRequest($request_id, $attributes = [])
+    {
+        return $this->request('put', 'sandbox/requests/'.$request_id, $attributes);
     }
 }
