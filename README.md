@@ -27,6 +27,8 @@ or update your `composer.json` file to include:
 ```
 Run `composer update`
 
+> Note that the required version of PHP is 5.5. If you want use library with PHP 5.4 you should use 1.2.0 version.
+
 ## Usage
 
 ### Create client

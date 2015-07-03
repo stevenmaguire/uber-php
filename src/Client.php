@@ -303,7 +303,7 @@ class Client
     {
         if ($response = $e->getResponse()) {
             $exception = new Exception($response->getReasonPhrase(), $response->getStatusCode(), $e);
-            $exception->setBody($response->json());
+            $exception->setBody(json_decode($response->getBody()));
 
             throw $exception;
         }
