@@ -3,8 +3,9 @@
 use Stevenmaguire\Uber\Client as Uber;
 use Mockery as m;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Message\MessageFactory;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Exception\ClientException as HttpClientException;
 
 class UberTest extends \PHPUnit_Framework_TestCase
@@ -423,18 +424,16 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $params = [];
         $responseCode = 429;
         $responseHeaders = ['Content-Length' => 0];
+        $mock = new MockHandler([
+            new Response($responseCode, $responseHeaders)
+        ]);
+        $handler = HandlerStack::create($mock);
 
-        $factory = new MessageFactory;
-        $response = $factory->createResponse($responseCode, $responseHeaders);
-
-        $mock = new Mock([$response]);
-
-        $http_client = new HttpClient;
-        $http_client->getEmitter()->attach($mock);
+        $http_client = new HttpClient(['handler' => $handler]);
 
         $this->client->setHttpClient($http_client);
 
-        $products = $this->client->getProducts($params);
+        $this->client->getProducts($params);
     }
 
     public function test_Http_Exceptions_Include_Meta_From_Uber()
@@ -449,18 +448,17 @@ class UberTest extends \PHPUnit_Framework_TestCase
             "Accept" => "application/json"
         ];
 
-        $factory = new MessageFactory;
-        $response = $factory->createResponse($responseCode, $responseHeaders, $responsePayload);
+        $mock = new MockHandler([
+            new Response($responseCode, $responseHeaders, $responsePayload)
+        ]);
+        $handler = HandlerStack::create($mock);
 
-        $mock = new Mock([$response]);
-
-        $http_client = new HttpClient;
-        $http_client->getEmitter()->attach($mock);
+        $http_client = new HttpClient(['handler' => $handler]);
 
         $this->client->setHttpClient($http_client);
 
         try {
-            $products = $this->client->getProducts($params);
+            $this->client->getProducts($params);
         } catch (\Stevenmaguire\Uber\Exception $e) {
             $this->assertContains($responseReason, $e->getMessage());
             $this->assertEquals($responseCode, $e->getCode());
@@ -473,7 +471,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $params = [];
         $exception = new HttpClientException(
             uniqid(),
-            m::mock('GuzzleHttp\Message\RequestInterface')
+            m::mock('Psr\Http\Message\RequestInterface')
         );
         $http_client = m::mock('GuzzleHttp\Client');
         $http_client->shouldReceive('get')->times(1)->andThrow($exception);
