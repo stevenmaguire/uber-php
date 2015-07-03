@@ -1,6 +1,24 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.3.0 - 2015-07-03
+
+### Added
+- Upgraded Guzzle package to version 6
+- Bumped minimum PHP version from 5.4 to 5.5
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.2.0 - 2015-05-28
 
 ### Added
