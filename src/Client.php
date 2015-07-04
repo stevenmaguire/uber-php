@@ -2,7 +2,7 @@
 
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as HttpClientException;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 
 class Client
 {
