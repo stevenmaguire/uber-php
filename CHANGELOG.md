@@ -1,7 +1,7 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
-## 1.3.1 - 2015-07-03
+## 1.3.1 - 2015-07-06
 
 ### Added
 - Corrected namespace for Guzzle 6 upgrade
