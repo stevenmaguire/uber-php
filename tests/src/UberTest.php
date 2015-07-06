@@ -128,7 +128,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
         $this->client->setAccessToken(null);
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"products": [{"product_id": "327f7914-cd12-4f77-9e0c-b27bac580d03","description": "The original Uber","display_name": "UberBLACK","capacity": 4,"image": "http://..."},{"product_id": "955b92da-2b90-4f32-9586-f766cee43b99","description": "Room for everyone","display_name": "UberSUV","capacity": 6,"image": "http://..."},{"product_id": "622237e-c1e4-4523-b6e7-e1ac53f625ed","description": "Taxi without the hassle","display_name": "uberTAXI","capacity": 4,"image": "http://..."},{"product_id": "b5e74e96-5d27-4caf-83e9-54c030cd6ac5","description": "The low-cost Uber","display_name": "uberX","capacity": 4,"image": "http://..."}]}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -147,7 +147,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     {
         $product_id = 'mock_product_id';
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"product_id": "'.$product_id.'","description": "The original Uber","display_name": "UberBLACK","capacity": 4,"image": "http://..."}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -170,7 +170,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
             'end_longitude' => '-87.67126465',
         ];
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"prices": [{"product_id": "08f17084-23fd-4103-aa3e-9b660223934b","currency_code": "USD","display_name": "UberBLACK","estimate": "$23-29","low_estimate": 23,"high_estimate": 29,"surge_multiplier": 1,"duration": 640,"distance": 5.34},{"product_id": "9af0174c-8939-4ef6-8e91-1a43a0e7c6f6","currency_code": "USD","display_name": "UberSUV","estimate": "$36-44","low_estimate": 36,"high_estimate": 44,"surge_multiplier": 1.25,"duration": 640,"distance": 5.34},{"product_id": "aca52cea-9701-4903-9f34-9a2395253acb","currency_code": null,"display_name": "uberTAXI","estimate": "Metered","low_estimate": null,"high_estimate": null,"surge_multiplier": 1,"duration": 640,"distance": 5.34},{"product_id": "a27a867a-35f4-4253-8d04-61ae80a40df5","currency_code": "USD","display_name": "uberX","estimate": "$15","low_estimate": 15,"high_estimate": 15,"surge_multiplier": 1,"duration": 640,"distance": 5.34}]}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -191,7 +191,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
             'start_longitude' => '-87.62730337',
         ];
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"times": [{"product_id": "5f41547d-805d-4207-a297-51c571cf2a8c","display_name": "UberBLACK","estimate": 410},{"product_id": "694558c9-b34b-4836-855d-821d68a4b944","display_name": "UberSUV","estimate": 535},{"product_id": "65af3521-a04f-4f80-8ce2-6d88fb6648bc","display_name": "uberTAXI","estimate": 294},{"product_id": "17b011d3-65be-421d-adf6-a5480a366453","display_name": "uberX","estimate": 288}]}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -214,7 +214,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
             'end_longitude' => '-87.67126465',
         ];
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"display_text": "Free ride up to $30","localized_value": "$30","type": "trip_credit"}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -237,7 +237,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
         $this->client->setVersion('v1.1');
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"offset": 0,"limit": 1,"count": 5,"history": [{"uuid": "7354db54-cc9b-4961-81f2-0094b8e2d215","request_time": 1401884467,"product_id": "edf5e5eb-6ae6-44af-bec6-5bdcf1e3ed2c","status": "completed","distance": 0.0279562,"start_time": 1401884646,"end_time": 1401884732}]}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -253,7 +253,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
     public function test_Get_Profile()
     {
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"first_name": "Uber","last_name": "Developer","email": "developer@uber.com","picture": "https://...","promo_code": "teypo","uuid": "91d81273-45c2-4b57-8124-d0165f8240c0"}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -279,7 +279,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
         $this->client->setUseSandbox(true);
 
-        $postResponse = m::mock('GuzzleHttp\Message\Response');
+        $postResponse = m::mock('GuzzleHttp\Psr7\Response');
         $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id": "852b8fdd-4369-4659-9628-e122662ad257","status": "processing","vehicle": null,"driver": null,"location": null,"eta": 5,"surge_multiplier": null}');
         $postResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -297,7 +297,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     {
         $request_id = 'mock_request_id';
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id": "'.$request_id.'","status": "processing","vehicle": null,"driver": null,"location": null,"eta": 5,"surge_multiplier": null}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -315,7 +315,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     {
         $request_id = 'mock_request_id';
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id":"'.$request_id.'","href":"https://trip.uber.com/abc123"}');
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -333,7 +333,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     {
         $request_id = 'mock_request_id';
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -359,7 +359,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request_id = 'mock_request_id';
         $request_body = ['status' => uniqid()];
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
@@ -378,7 +378,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $product_id = 'mock_request_id';
         $request_body = ['surge_multiplier' => uniqid()];
 
-        $getResponse = m::mock('GuzzleHttp\Message\Response');
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
