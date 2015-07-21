@@ -101,10 +101,10 @@ $promotions = $client->getPromotions(array(
 
 ### Get User Activity
 
-This feature is only available in version `1.1`.
+This feature is only available since version `1.1`.
 
 ```php
-$client->setVersion('v1.1');
+$client->setVersion('v1.2'); // or v1.1
 $history = $client->getHistory(array(
     'limit' => 50, // optional
     'offset' => 0 // optional
@@ -112,6 +112,7 @@ $history = $client->getHistory(array(
 ```
 
 [https://developer.uber.com/v1/endpoints/#user-activity-v1-1](https://developer.uber.com/v1/endpoints/#user-activity-v1-1)
+[https://developer.uber.com/v1/endpoints/#user-activity-v1-2](https://developer.uber.com/v1/endpoints/#user-activity-v1-2)
 
 ### Get User Profile
 
@@ -163,6 +164,20 @@ $request = $client->getRequest($request_id);
 
 [https://developer.uber.com/v1/endpoints/#request-details](https://developer.uber.com/v1/endpoints/#request-details)
 
+### Get Ride Estimate
+
+```php
+$requestEstimate = $client->getRequestEstimate(array(
+    'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
+    'start_latitude' => '41.85582993',
+    'start_longitude' => '-87.62730337',
+    'end_latitude' => '41.87499492', // optional
+    'end_longitude' => '-87.67126465', // optional
+));
+```
+
+[https://developer.uber.com/v1/endpoints/#request-estimate](https://developer.uber.com/v1/endpoints/#request-estimate)
+
 ### Get Ride Map
 
 ```php
@@ -170,6 +185,14 @@ $map = $client->getRequestMap($request_id);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-map](https://developer.uber.com/v1/endpoints/#request-map)
+
+### Get Ride Receipt
+
+```php
+$receipt = $client->getRequestReceipt($request_id);
+```
+
+[https://developer.uber.com/v1/endpoints/#request-receipt](https://developer.uber.com/v1/endpoints/#request-receipt)
 
 ### Cancel Ride
 

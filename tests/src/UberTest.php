@@ -267,6 +267,30 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $profile = $this->client->getProfile();
     }
 
+    public function test_Get_Request_Estimate()
+    {
+        $params = [
+            'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
+            'start_latitude' => '41.85582993',
+            'start_longitude' => '-87.62730337',
+            'end_latitude' => '41.87499492',
+            'end_longitude' => '-87.67126465',
+        ];
+
+        $postResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"price":{"surge_multiplier]": 1,"minimum": 15,"surge_confirmation_href": "","currency_code": "USD","surge_confirmation_id]": ""},"trip": {"pickup_estimate": 10}}');
+        $postResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('post')
+            ->with($this->client->getUrlFromPath('/requests/estimate'), ['headers' => $this->client->getHeaders(), 'json' => $params])
+            ->times(1)->andReturn($postResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $requestEstimate = $this->client->getRequestEstimate($params);
+    }
+
     public function test_Request_Ride()
     {
         $params = [
@@ -309,6 +333,24 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $request = $this->client->getRequest($request_id);
+    }
+
+    public function test_Get_Request_Receipt()
+    {
+        $request_id = 'mock_request_id';
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id": "b5512127-a134-4bf4-b1ba-fe9f48f56d9d", "charges": [{"name": "Base Fare", "amount": "2.20", "type": "base_fare" }, {"name": "Distance", "amount": "2.75", "type": "distance", }, {"name": "Time", "amount": "3.57", "type": "time"} ], "surge_charge" : {"name": "Surge x1.5", "amount": "4.26", "type": "surge"}, "charge_adjustments" : [{"name": "Promotion", "amount": "-2.43", "type": "promotion", }, { "name": "Safe Rides Fee", "amount": "1.00", "type": "safe_ride_fee"}, { "name": "Rounding Down", "amount": "0.78", "type": "rounding_down"}], "normal_fare": "$8.52", "subtotal": "$12.78", "total_charged": "$5.92", "total_owed": null, "currency_code": "USD", "duration": "00:11:35", "distance": "1.49", "distance_label": "miles"}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/requests/'.$request_id.'/receipt'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $receipt = $this->client->getRequestReceipt($request_id);
     }
 
     public function test_Get_Request_Map()

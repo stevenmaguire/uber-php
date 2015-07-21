@@ -1,6 +1,24 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.4.0 - 2015-07-08
+
+### Added
+- Ride estimate API support
+- Ride receipt API support
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.3.1 - 2015-07-06
 
 ### Added

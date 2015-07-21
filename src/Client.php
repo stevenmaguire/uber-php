@@ -237,6 +237,22 @@ class Client
     }
 
     /**
+     * The Request Estimate endpoint allows a ride to be estimated given the
+     * desired product, start, and end locations. If the end location is
+     * not provided, only the pickup ETA and details of surge pricing
+     * information are provided. If the pickup ETA is null, there are no cars
+     * available, but an estimate may still be given to the user.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getRequestEstimate($attributes = [])
+    {
+        return $this->request('post', 'requests/estimate', $attributes);
+    }
+
+    /**
      * Get a single request
      *
      * @param    string   $request_id    Request id
@@ -246,6 +262,18 @@ class Client
     public function getRequest($request_id)
     {
         return $this->request('get', 'requests/'.$request_id);
+    }
+
+    /**
+     * Get the receipt information of the completed request.
+     *
+     * @param    string   $request_id    Request id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getRequestReceipt($request_id)
+    {
+        return $this->request('get', 'requests/'.$request_id.'/receipt');
     }
 
     /**
