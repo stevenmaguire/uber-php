@@ -353,7 +353,7 @@ class Client
             'access_token'  =>  null,
             'server_token'  =>  null,
             'use_sandbox'   =>  false,
-            'version'   =>  'v1',
+            'version'   =>  'v1.2',
             'locale'    => 'en_US',
         );
 

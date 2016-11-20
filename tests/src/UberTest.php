@@ -38,6 +38,17 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($client->getLocale(), getenv('UBER_LOCALE'));
     }
 
+    public function test_Configuration_Defaults()
+    {
+        $client = new Uber();
+
+        $this->assertEquals(null, $client->getAccessToken());
+        $this->assertEquals(null, $client->getServerToken());
+        $this->assertEquals(false, $client->getUseSandbox());
+        $this->assertEquals('v1.2', $client->getVersion());
+        $this->assertEquals('en_US', $client->getLocale());
+    }
+
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */
