@@ -463,6 +463,22 @@ class Client
     }
 
     /**
+     * The Places endpoint allows updating the home and work addresses from an
+     * Uber user's profile.
+     *
+     * Only home and work are acceptable.
+     *
+     * @param string $place_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setPlace($place_id, $attributes = [])
+    {
+        return $this->request('put', 'places/'.$place_id, $attributes);
+    }
+
+    /**
      * Set product properties for sandbox responses
      *
      * @param string $product_id

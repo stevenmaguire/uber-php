@@ -140,6 +140,17 @@ $place = $client->getPlace($placeId);
 
 [https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get)
 
+### Update a Place
+
+```php
+$placeId = 'home';
+$attributes = ['address' => '685 Market St, San Francisco, CA 94103, USA'];
+
+$place = $client->setPlace($placeId, $attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-put](https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-put)
+
 ### Request A Ride
 
 ```php

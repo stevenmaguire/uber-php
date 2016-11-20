@@ -483,6 +483,25 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setRequest($request_id, $request_body);
     }
 
+    public function test_Set_Place()
+    {
+        $placeId = 'home';
+        $request_body = ['address' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"address": "'.$request_body['address'].'"}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/places/'.$placeId), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setPlace($placeId, $request_body);
+    }
+
     public function test_Set_Product()
     {
         $product_id = 'mock_request_id';
