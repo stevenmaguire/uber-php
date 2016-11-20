@@ -476,6 +476,25 @@ class Client
     }
 
     /**
+     * The Ride Request endpoint allows updating an ongoing request’s
+     * destination.
+     *
+     * This endpoint behaves similarly to the PATCH /v1.2/requests/{request_id}
+     * endpoint, except you do not need to provide a request_id. If there is no
+     * trip in progress the endpoint will result in a 404 not found error. This
+     * endpoint will only work for trips requested through your app unless you
+     * have the all_trips scope.
+     *
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setCurrentRequest($attributes = [])
+    {
+        return $this->request('put', 'requests/current', $attributes);
+    }
+
+    /**
      * Set Http Client
      *
      * @param HttpClient  $client

@@ -201,6 +201,22 @@ $request = $client->getRequest($request_id);
 
 [https://developer.uber.com/v1/endpoints/#request-details](https://developer.uber.com/v1/endpoints/#request-details)
 
+### Update Current Ride Details
+
+```php
+$requestDetails = array(
+    'end_address' => '685 Market St, San Francisco, CA 94103, USA',
+    'end_nickname' => 'da crib',
+    'end_place_id' => 'home',
+    'end_latitude' => '41.87499492',
+    'end_longitude' => '-87.67126465'
+);
+
+$updateRequest = $client->setCurrentRequest($requestDetails);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-patch](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-patch)
+
 ### Get Ride Estimate
 
 ```php

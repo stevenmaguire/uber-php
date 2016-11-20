@@ -480,6 +480,24 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($locale, getenv('UBER_LOCALE'));
     }
 
+    public function test_Set_Current_Request()
+    {
+        $request_body = ['status' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/requests/current'), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setCurrentRequest($request_body);
+    }
+
     public function test_Set_Request()
     {
         $request_id = 'mock_request_id';
