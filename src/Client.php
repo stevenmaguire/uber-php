@@ -3,6 +3,7 @@
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ClientException as HttpClientException;
 use GuzzleHttp\Psr7\Response;
+use ReflectionClass;
 
 class Client
 {
@@ -368,11 +369,16 @@ class Client
      */
     private function parseRateLimitFromResponse(Response $response)
     {
-        $this->rate_limit = new RateLimit(
+        $rateLimitHeaders = array_filter([
             $response->getHeader('X-Rate-Limit-Limit'),
             $response->getHeader('X-Rate-Limit-Remaining'),
             $response->getHeader('X-Rate-Limit-Reset')
-        );
+        ]);
+
+        if (count($rateLimitHeaders) == 3) {
+            $rateLimitClass = new ReflectionClass(RateLimit::class);
+            $this->rate_limit = $rateLimitClass->newInstanceArgs($rateLimitHeaders);
+        }
     }
 
     /**

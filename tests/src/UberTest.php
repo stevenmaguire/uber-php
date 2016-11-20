@@ -251,11 +251,12 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $history = $this->client->getHistory($params);
     }
 
-    public function test_Get_Profile()
+    public function test_Get_Profile_with_Rate_Limit_Headers()
     {
+        $rateLimitHeaders = [1000, 955, strtotime("+1 day")];
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"first_name": "Uber","last_name": "Developer","email": "developer@uber.com","picture": "https://...","promo_code": "teypo","uuid": "91d81273-45c2-4b57-8124-d0165f8240c0"}');
-        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues($rateLimitHeaders);
 
         $http_client = m::mock('GuzzleHttp\Client');
         $http_client->shouldReceive('get')
@@ -265,6 +266,28 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $profile = $this->client->getProfile();
+        $rateLimit = $this->client->getRateLimit();
+        $this->assertEquals($rateLimit->getLimit(), $rateLimitHeaders[0]);
+        $this->assertEquals($rateLimit->getRemaining(), $rateLimitHeaders[1]);
+        $this->assertEquals($rateLimit->getReset(), $rateLimitHeaders[2]);
+    }
+
+    public function test_Get_Profile_without_Rate_Limit_Headers()
+    {
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"first_name": "Uber","last_name": "Developer","email": "developer@uber.com","picture": "https://...","promo_code": "teypo","uuid": "91d81273-45c2-4b57-8124-d0165f8240c0"}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([null, null, null]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/me'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $profile = $this->client->getProfile();
+        $rateLimit = $this->client->getRateLimit();
+        $this->assertNull($rateLimit);
     }
 
     public function test_Get_Request_Estimate()
