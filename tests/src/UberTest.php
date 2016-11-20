@@ -130,6 +130,22 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($headers['Accept-Language']);
     }
 
+    public function test_Get_Payment_Methods()
+    {
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"payment_methods": [{"payment_method_id": "5f384f7d-8323-4207-a297-51c571234a8c","type": "baidu_wallet","description": "***53",},{"payment_method_id": "f33847de-8113-4587-c307-51c2d13a823c","type": "alipay","description": "ga***@uber.com",},{"payment_method_id": "f43847de-8113-4587-c307-51c2d13a823c","type": "visa","description": "***23"},{"payment_method_id": "517a6c29-3a2b-45cb-94a3-35d679909a71","type": "american_express","description": "***05"},{"payment_method_id": "f53847de-8113-4587-c307-51c2d13a823c","type": "business_account","description": "Late Night Ride"}],"last_used": "f53847de-8113-4587-c307-51c2d13a823c"}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/payment-methods'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $product = $this->client->getPaymentMethods();
+    }
+
     public function test_Get_Products()
     {
         $params = [

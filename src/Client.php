@@ -168,6 +168,18 @@ class Client
     }
 
     /**
+     * The Payment Methods endpoint allows retrieving the list of the user’s
+     * available payment methods. These can be leveraged in order to supply a
+     * payment_method_id to the POST /requests endpoint.
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getPaymentMethods()
+    {
+        return $this->request('get', 'payment-methods');
+    }
+
+    /**
      * The Price Estimates endpoint returns an estimated price range for each
      * product offered at a given location. The price estimate is provided as
      * a formatted string with the full price range and the localized currency
@@ -180,6 +192,18 @@ class Client
     public function getPriceEstimates($attributes = [])
     {
         return $this->request('get', 'estimates/price', $attributes);
+    }
+
+    /**
+     * Get a single product
+     *
+     * @param    string   $product_id    Product id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getProduct($product_id)
+    {
+        return $this->request('get', 'products/'.$product_id);
     }
 
     /**
@@ -198,18 +222,6 @@ class Client
     public function getProducts($attributes = [])
     {
         return $this->request('get', 'products', $attributes);
-    }
-
-    /**
-     * Get a single product
-     *
-     * @param    string   $product_id    Product id
-     *
-     * @return   stdClass               The JSON response from the request
-     */
-    public function getProduct($product_id)
-    {
-        return $this->request('get', 'products/'.$product_id);
     }
 
     /**

@@ -104,7 +104,6 @@ $history = $client->getHistory(array(
 ```
 
 [https://developer.uber.com/v1/endpoints/#user-activity-v1-1](https://developer.uber.com/v1/endpoints/#user-activity-v1-1)
-[https://developer.uber.com/v1/endpoints/#user-activity-v1-2](https://developer.uber.com/v1/endpoints/#user-activity-v1-2)
 
 ### Get User Profile
 
@@ -123,8 +122,13 @@ $profileResponse = $client->setProfile($attributes);
 
 [https://developer.uber.com/docs/riders/references/api/v1.2/me-patch](https://developer.uber.com/docs/riders/references/api/v1.2/me-patch)
 
+### Get Payment Methods
 
-[https://developer.uber.com/v1/endpoints/#user-profile](https://developer.uber.com/v1/endpoints/#user-profile)
+```php
+$paymentMethods = $client->getPaymentMethods();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get](https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get)
 
 ### Request A Ride
 
