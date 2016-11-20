@@ -247,6 +247,14 @@ $receipt = $client->getRequestReceipt($request_id);
 
 [https://developer.uber.com/v1/endpoints/#request-receipt](https://developer.uber.com/v1/endpoints/#request-receipt)
 
+### Cancel Current Ride
+
+```php
+$request = $client->cancelCurrentRequest();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-delete](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-delete)
+
 ### Cancel Ride
 
 ```php
@@ -287,7 +295,7 @@ $request = $client->requestRide(array(
     'end_longitude' => '-87.67126465'
 ));
 
-$updateRequest = $client->setRequest($request->request_id, ['status' => 'accepted']);
+$updateRequest = $client->setSandboxRequest($request->request_id, ['status' => 'accepted']);
 ```
 [https://developer.uber.com/v1/sandbox/#request](https://developer.uber.com/v1/sandbox/#request)
 
@@ -296,7 +304,7 @@ Simulate the possible responses the Request endpoint will return when requesting
 ```php
 $product = $client->getProduct($product_id);
 
-$updateProduct = $client->setProduct($product_id, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
+$updateProduct = $client->setSandboxProduct($product_id, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
 ```
 
 [https://developer.uber.com/v1/sandbox/#product-types](https://developer.uber.com/v1/sandbox/#product-types)

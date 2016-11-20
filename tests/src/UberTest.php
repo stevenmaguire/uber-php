@@ -455,6 +455,22 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $map = $this->client->getRequestMap($request_id);
     }
 
+    public function test_Cancel_Current_Request()
+    {
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('delete')
+            ->with($this->client->getUrlFromPath('/requests/current'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $cancel_request = $this->client->cancelCurrentRequest();
+    }
+
     public function test_Cancel_Request()
     {
         $request_id = 'mock_request_id';
@@ -514,7 +530,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
         $this->client->setHttpClient($http_client);
 
-        $request = $this->client->setRequest($request_id, $request_body);
+        $request = $this->client->setSandboxRequest($request_id, $request_body);
     }
 
     public function test_Set_Place()
@@ -552,7 +568,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
 
         $this->client->setHttpClient($http_client);
 
-        $request = $this->client->setProduct($product_id, $request_body);
+        $request = $this->client->setSandboxProduct($product_id, $request_body);
     }
 
     public function test_Set_Profile()

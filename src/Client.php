@@ -85,6 +85,16 @@ class Client
     }
 
     /**
+     * Cancel the current request
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function cancelCurrentRequest()
+    {
+        return $this->request('delete', 'requests/current');
+    }
+
+    /**
      * Cancel a single request
      *
      * @param    string   $request_id    Request id
@@ -524,19 +534,6 @@ class Client
     }
 
     /**
-     * Set product properties for sandbox responses
-     *
-     * @param string $product_id
-     * @param array $attributes
-     *
-     * @return  stdClass
-     */
-    public function setProduct($product_id, $attributes = [])
-    {
-        return $this->request('put', 'sandbox/products/'.$product_id, $attributes);
-    }
-
-    /**
      * Set profile properties
      *
      * @param array $attributes
@@ -549,6 +546,19 @@ class Client
     }
 
     /**
+     * Set product properties for sandbox responses
+     *
+     * @param string $product_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setSandboxProduct($product_id, $attributes = [])
+    {
+        return $this->request('put', 'sandbox/products/'.$product_id, $attributes);
+    }
+
+    /**
      * Set request properties for sandbox responses
      *
      * @param string $request_id
@@ -556,7 +566,7 @@ class Client
      *
      * @return  stdClass
      */
-    public function setRequest($request_id, $attributes = [])
+    public function setSandboxRequest($request_id, $attributes = [])
     {
         return $this->request('put', 'sandbox/requests/'.$request_id, $attributes);
     }
