@@ -546,6 +546,20 @@ class Client
     }
 
     /**
+     * The Ride Request endpoint allows updating an ongoing request’s
+     * destination using the Ride Request endpoint.
+     *
+     * @param string $request_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setRequest($request_id, $attributes = [])
+    {
+        return $this->request('put', 'requests/'.$request_id, $attributes);
+    }
+
+    /**
      * Set product properties for sandbox responses
      *
      * @param string $product_id

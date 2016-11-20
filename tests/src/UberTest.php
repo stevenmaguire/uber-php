@@ -514,7 +514,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setCurrentRequest($request_body);
     }
 
-    public function test_Set_Request()
+    public function test_Set_Sandbox_Request()
     {
         $request_id = 'mock_request_id';
         $request_body = ['status' => uniqid()];
@@ -531,6 +531,25 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $request = $this->client->setSandboxRequest($request_id, $request_body);
+    }
+
+    public function test_Set_Request()
+    {
+        $request_id = 'mock_request_id';
+        $request_body = ['status' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/requests/'.$request_id), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setRequest($request_id, $request_body);
     }
 
     public function test_Set_Place()
@@ -552,7 +571,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setPlace($placeId, $request_body);
     }
 
-    public function test_Set_Product()
+    public function test_Set_Sandbox_Product()
     {
         $product_id = 'mock_request_id';
         $request_body = ['surge_multiplier' => uniqid()];
