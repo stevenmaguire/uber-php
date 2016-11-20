@@ -449,6 +449,18 @@ class Client
     }
 
     /**
+     * Set profile properties
+     *
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setProfile($attributes = [])
+    {
+        return $this->request('put', 'me', $attributes);
+    }
+
+    /**
      * Set request properties for sandbox responses
      *
      * @param string $request_id

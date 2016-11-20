@@ -468,6 +468,24 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setProduct($product_id, $request_body);
     }
 
+    public function test_Set_Profile()
+    {
+        $request_body = ['applied_promotion_codes' => uniqid()];
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"promotion_code": "'.$request_body['applied_promotion_codes'].'","description": "$20.00 has been applied to your account."}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/me'), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->setProfile($request_body);
+    }
+
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */

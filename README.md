@@ -114,6 +114,18 @@ $profile = $client->getProfile();
 
 [https://developer.uber.com/v1/endpoints/#user-profile](https://developer.uber.com/v1/endpoints/#user-profile)
 
+### Update User Profile
+
+```php
+$attributes = ['applied_promotion_codes' => 'PROMO_CODE'];
+$profileResponse = $client->setProfile($attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/me-patch](https://developer.uber.com/docs/riders/references/api/v1.2/me-patch)
+
+
+[https://developer.uber.com/v1/endpoints/#user-profile](https://developer.uber.com/v1/endpoints/#user-profile)
+
 ### Request A Ride
 
 ```php
