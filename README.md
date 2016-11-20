@@ -130,6 +130,16 @@ $paymentMethods = $client->getPaymentMethods();
 
 [https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get](https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get)
 
+### Get Place
+
+```php
+$placeId = 'home';
+
+$place = $client->getPlace($placeId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get)
+
 ### Request A Ride
 
 ```php

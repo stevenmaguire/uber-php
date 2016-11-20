@@ -180,6 +180,21 @@ class Client
     }
 
     /**
+     * The Places endpoint allows retrieving the home and work addresses from
+     * an Uber user's profile.
+     *
+     * The name of the place to retrieve. Only home and work are acceptable.
+     *
+     * @param    string   $place_id     Place id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getPlace($place_id)
+    {
+        return $this->request('get', 'places/'.$place_id);
+    }
+
+    /**
      * The Price Estimates endpoint returns an estimated price range for each
      * product offered at a given location. The price estimate is provided as
      * a formatted string with the full price range and the localized currency
