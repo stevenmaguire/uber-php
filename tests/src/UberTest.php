@@ -385,6 +385,22 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->requestRide($params);
     }
 
+    public function test_Get_Current_Request()
+    {
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id": "","status": "processing","vehicle": null,"driver": null,"location": null,"eta": 5,"surge_multiplier": null}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/requests/current'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $request = $this->client->getCurrentRequest();
+    }
+
     public function test_Get_Request()
     {
         $request_id = 'mock_request_id';

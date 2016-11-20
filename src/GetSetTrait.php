@@ -28,7 +28,7 @@ trait GetSetTrait
 
         } // @codeCoverageIgnore
 
-        throw new Exception('Method not implemented');
+        throw new Exception($method . ' method not implemented');
     }
 
     /**

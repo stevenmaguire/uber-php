@@ -185,6 +185,14 @@ try {
 
 [https://developer.uber.com/v1/endpoints/#request](https://developer.uber.com/v1/endpoints/#request)
 
+### Get Current Ride Details
+
+```php
+$request = $client->getCurrentRequest();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-get](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-get)
+
 ### Get Ride Details
 
 ```php

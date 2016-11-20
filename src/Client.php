@@ -149,6 +149,32 @@ class Client
     }
 
     /**
+     * The Ride Request endpoint allows retrieving real-time details for an
+     * ongoing trip.
+     *
+     * This endpoint behaves similarly to the GET /requests/{request_id}
+     * endpoint, except you do not need to provide a request_id. If there is
+     * no trip in progress the endpoint will result in a 404 not found error.
+     * This endpoint will only work for trips requested through your app unless
+     * you have the all_trips scope.
+     *
+     * By default, only details about trips your app requested will be returned.
+     * If your app has all_trips scope, however, trip details will be returned
+     * for all trips irrespective of which application initiated them.
+     *
+     * See the Ride Request tutorial for a step-by-step guide to requesting
+     * rides on behalf of an Uber user. Please review the Sandbox documentation
+     * on how to develop and test against these endpoints without making
+     * real-world Ride Requests and being charged.
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getCurrentRequest()
+    {
+        return $this->request('get', 'requests/current');
+    }
+
+    /**
      * The User Activity endpoint returns a limited amount of data about a
      * user's lifetime activity with Uber. The response will include pickup and
      * dropoff times, the distance of past requests, and information about
