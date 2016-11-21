@@ -280,6 +280,73 @@ $request = $client->cancelRequest($request_id);
 
 [https://developer.uber.com/v1/endpoints/#request-cancel](https://developer.uber.com/v1/endpoints/#request-cancel)
 
+### Create Reminder
+
+```php
+$attributes = [
+    'reminder_time' => '1429294463',
+    'phone_number' => '555-555-5555',
+    'event' => [
+        'time' => '1429294463',
+        'name' => 'Frisbee with friends',
+        'location' => 'Dolores Park',
+        'latitude' => '37.759773',
+        'longitude' => '-122.427063',
+    ],
+    'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+    'trip_branding' => [
+        'link_text' => 'View team roster',
+        'partner_deeplink' => 'partner://team/9383',
+    ]
+];
+$reminder = $client->createReminder($attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-post](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-post)
+
+### Get Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$reminder = $client->getReminder($reminderId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-get)
+
+### Update Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$attributes = [
+    'reminder_time' => '1429294463',
+    'phone_number' => '555-555-5555',
+    'event' => [
+        'time' => '1429294463',
+        'name' => 'Frisbee with friends',
+        'location' => 'Dolores Park',
+        'latitude' => '37.759773',
+        'longitude' => '-122.427063',
+    ],
+    'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+    'trip_branding' => [
+        'link_text' => 'View team roster',
+        'partner_deeplink' => 'partner://team/9383',
+    ]
+];
+$reminder = $client->setReminder($reminderId, $attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-patch](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-patch)
+
+### Cancel Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$reminder = $client->cancelReminder($reminderId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete)
+
 ### Rate Limiting
 
 Rate limiting is implemented on the basis of a specific client's secret token. By default, 1,000 requests per hour can be made per secret token.

@@ -25,7 +25,6 @@ trait GetSetTrait
             if (property_exists($this, $property)) {
                 return $this->updateAttribute($property, $parameters[0]);
             }
-
         } // @codeCoverageIgnore
 
         throw new Exception($method . ' method not implemented');

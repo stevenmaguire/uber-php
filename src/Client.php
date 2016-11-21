@@ -85,6 +85,19 @@ class Client
     }
 
     /**
+     * The Reminders endpoint allows developers to set a reminder for a future
+     * trip.
+     *
+     * @param    array    $attributes   Query attributes
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function createReminder($attributes)
+    {
+        return $this->request('post', 'reminders', $attributes);
+    }
+
+    /**
      * Cancel the current request
      *
      * @return   stdClass               The JSON response from the request
@@ -92,6 +105,19 @@ class Client
     public function cancelCurrentRequest()
     {
         return $this->request('delete', 'requests/current');
+    }
+
+    /**
+     * The Reminders endpoint allows you to remove any reminder in the pending
+     * state from being sent.
+     *
+     * @param    string   $reminder_id  Reminder id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function cancelReminder($reminder_id)
+    {
+        return $this->request('delete', 'reminders/'.$reminder_id);
     }
 
     /**
@@ -219,7 +245,7 @@ class Client
      * The Places endpoint allows retrieving the home and work addresses from
      * an Uber user's profile.
      *
-     * The name of the place to retrieve. Only home and work are acceptable.
+     * Only home and work are acceptable.
      *
      * @param    string   $place_id     Place id
      *
@@ -298,6 +324,19 @@ class Client
     public function getPromotions($attributes = [])
     {
         return $this->request('get', 'promotions', $attributes);
+    }
+
+    /**
+     * The Reminders endpoint allows you to get the status of an existing ride
+     * reminder.
+     *
+     * @param    string   $reminder_id  Reminder id
+     *
+     * @return   stdClass               The JSON response from the request
+     */
+    public function getReminder($reminder_id)
+    {
+        return $this->request('get', 'reminders/'.$reminder_id);
     }
 
     /**
@@ -543,6 +582,19 @@ class Client
     public function setProfile($attributes = [])
     {
         return $this->request('put', 'me', $attributes);
+    }
+
+    /**
+     * The Reminders endpoint allows you to update an existing reminder.
+     *
+     * @param string $reminder_id
+     * @param array $attributes
+     *
+     * @return  stdClass
+     */
+    public function setReminder($reminder_id, $attributes = [])
+    {
+        return $this->request('put', 'reminders/'.$reminder_id, $attributes);
     }
 
     /**

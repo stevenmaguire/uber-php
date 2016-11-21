@@ -229,6 +229,24 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $estimates = $this->client->getPriceEstimates($params);
     }
 
+    public function test_Get_Reminder()
+    {
+        $reminder_id = 'mock_reminder_id';
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"event": {"name": "Frisbee with friends","location": "Dolores Park","latitude": 37.759773,"longitude": -122.427063,"time": 1429294463},"product_id": "a1111c8c-c720-46c3-8534-2fcdd730040d","reminder_id": "def-456","reminder_time": 1429294463,"reminder_status": "pending","trip_branding": {"link_text": "View team roster","partner_deeplink": "partner://team/9383"}}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/reminders/'.$reminder_id), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $reminder = $this->client->getReminder($reminder_id);
+    }
+
     public function test_Get_Time_Estimates()
     {
         $params = [
@@ -385,6 +403,39 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->requestRide($params);
     }
 
+    public function test_Create_Reminder()
+    {
+        $params = [
+            'reminder_time' => '1429294463',
+            'phone_number' => '555-555-5555',
+            'event' => [
+                'time' => '1429294463',
+                'name' => 'Frisbee with friends',
+                'location' => 'Dolores Park',
+                'latitude' => '37.759773',
+                'longitude' => '-122.427063',
+            ],
+            'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+            'trip_branding' => [
+                'link_text' => 'View team roster',
+                'partner_deeplink' => 'partner://team/9383',
+            ]
+        ];
+
+        $postResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"event": {"name": "Frisbee with friends","location": "Dolores Park","latitude": 37.759773,"longitude": -122.427063,"time": 1429294463},"product_id": "a1111c8c-c720-46c3-8534-2fcdd730040d","reminder_id": "def-456","reminder_time": 1429294463,"reminder_status": "pending","trip_branding": {"link_text": "View team roster","partner_deeplink": "partner://team/9383"}}');
+        $postResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('post')
+            ->with($this->client->getUrlFromPath('/reminders'), ['headers' => $this->client->getHeaders(), 'json' => $params])
+            ->times(1)->andReturn($postResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $reminder = $this->client->createReminder($params);
+    }
+
     public function test_Get_Current_Request()
     {
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
@@ -471,6 +522,23 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $cancel_request = $this->client->cancelCurrentRequest();
     }
 
+    public function test_Cancel_Reminder()
+    {
+        $reminderId = uniqid();
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('delete')
+            ->with($this->client->getUrlFromPath('/reminders/'.$reminderId), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $cancel_reminder = $this->client->cancelReminder($reminderId);
+    }
+
     public function test_Cancel_Request()
     {
         $request_id = 'mock_request_id';
@@ -512,6 +580,40 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->setHttpClient($http_client);
 
         $request = $this->client->setCurrentRequest($request_body);
+    }
+
+    public function test_Set_Reminder()
+    {
+        $reminderId = uniqid();
+        $params = [
+            'reminder_time' => '1429294463',
+            'phone_number' => '555-555-5555',
+            'event' => [
+                'time' => '1429294463',
+                'name' => 'Frisbee with friends',
+                'location' => 'Dolores Park',
+                'latitude' => '37.759773',
+                'longitude' => '-122.427063',
+            ],
+            'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+            'trip_branding' => [
+                'link_text' => 'View team roster',
+                'partner_deeplink' => 'partner://team/9383',
+            ]
+        ];
+
+        $postResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"event": {"name": "Frisbee with friends","location": "Dolores Park","latitude": 37.759773,"longitude": -122.427063,"time": 1429294463},"product_id": "a1111c8c-c720-46c3-8534-2fcdd730040d","reminder_id": "def-456","reminder_time": 1429294463,"reminder_status": "pending","trip_branding": {"link_text": "View team roster","partner_deeplink": "partner://team/9383"}}');
+        $postResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('put')
+            ->with($this->client->getUrlFromPath('/reminders/'.$reminderId), ['headers' => $this->client->getHeaders(), 'json' => $params])
+            ->times(1)->andReturn($postResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $reminder = $this->client->setReminder($reminderId, $params);
     }
 
     public function test_Set_Sandbox_Request()
