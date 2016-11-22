@@ -118,7 +118,7 @@ $profile = $client->getProfile();
 ### Update User Profile
 
 ```php
-$attributes = ['applied_promotion_codes' => 'PROMO_CODE'];
+$attributes = array('applied_promotion_codes' => 'PROMO_CODE');
 $profileResponse = $client->setProfile($attributes);
 ```
 
@@ -145,7 +145,7 @@ $place = $client->getPlace($placeId);
 
 ```php
 $placeId = 'home';
-$attributes = ['address' => '685 Market St, San Francisco, CA 94103, USA'];
+$attributes = array('address' => '685 Market St, San Francisco, CA 94103, USA');
 $place = $client->setPlace($placeId, $attributes);
 ```
 
@@ -299,22 +299,22 @@ $request = $client->cancelRequest($requestId);
 ### Create Reminder
 
 ```php
-$attributes = [
+$attributes = array(
     'reminder_time' => '1429294463',
     'phone_number' => '555-555-5555',
-    'event' => [
+    'event' => array(
         'time' => '1429294463',
         'name' => 'Frisbee with friends',
         'location' => 'Dolores Park',
         'latitude' => '37.759773',
         'longitude' => '-122.427063',
-    ],
+    ),
     'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
-    'trip_branding' => [
+    'trip_branding' => array(
         'link_text' => 'View team roster',
         'partner_deeplink' => 'partner://team/9383',
-    ]
-];
+    )
+);
 $reminder = $client->createReminder($attributes);
 ```
 
@@ -333,22 +333,22 @@ $reminder = $client->getReminder($reminderId);
 
 ```php
 $reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
-$attributes = [
+$attributes = array(
     'reminder_time' => '1429294463',
     'phone_number' => '555-555-5555',
-    'event' => [
+    'event' => array(
         'time' => '1429294463',
         'name' => 'Frisbee with friends',
         'location' => 'Dolores Park',
         'latitude' => '37.759773',
         'longitude' => '-122.427063',
-    ],
+    ),
     'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
-    'trip_branding' => [
+    'trip_branding' => array(
         'link_text' => 'View team roster',
         'partner_deeplink' => 'partner://team/9383',
-    ]
-];
+    )
+);
 $reminder = $client->setReminder($reminderId, $attributes);
 ```
 
@@ -399,7 +399,7 @@ $request = $client->requestRide(array(
     'end_longitude' => '-87.67126465'
 ));
 
-$updateRequest = $client->setSandboxRequest($request->request_id, ['status' => 'accepted']);
+$updateRequest = $client->setSandboxRequest($request->request_id, array('status' => 'accepted'));
 ```
 [https://developer.uber.com/v1/sandbox/#request](https://developer.uber.com/v1/sandbox/#request)
 
@@ -408,7 +408,7 @@ Simulate the possible responses the Request endpoint will return when requesting
 ```php
 $product = $client->getProduct($productId);
 
-$updateProduct = $client->setSandboxProduct($productId, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
+$updateProduct = $client->setSandboxProduct($productId, array('surge_multiplier' => 2.2, 'drivers_available' => false));
 ```
 
 [https://developer.uber.com/v1/sandbox/#product-types](https://developer.uber.com/v1/sandbox/#product-types)
