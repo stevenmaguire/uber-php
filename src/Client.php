@@ -104,7 +104,7 @@ class Client
      */
     public function cancelCurrentRequest()
     {
-        return $this->request('delete', 'requests/current');
+        return $this->cancelRequest('current');
     }
 
     /**
@@ -618,6 +618,7 @@ class Client
      * @param array $attributes
      *
      * @return  stdClass
+     * @throws  Exception
      */
     public function setSandboxProduct($productId, $attributes = [])
     {
@@ -633,6 +634,7 @@ class Client
      * @param array $attributes
      *
      * @return  stdClass
+     * @throws  Exception
      */
     public function setSandboxRequest($requestId, $attributes = [])
     {

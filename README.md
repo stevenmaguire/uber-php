@@ -30,7 +30,7 @@ $client = new Stevenmaguire\Uber\Client(array(
     'access_token' => 'YOUR ACCESS TOKEN',
     'server_token' => 'YOUR SERVER TOKEN',
     'use_sandbox'  => true, // optional, default false
-    'version'      => 'v1', // optional, default 'v1'
+    'version'      => 'v1.2', // optional, default 'v1.2'
     'locale'       => 'en_US', // optional, default 'en_US'
 ));
 ```
@@ -348,6 +348,8 @@ $reminder = $client->cancelReminder($reminderId);
 [https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete)
 
 ### Rate Limiting
+
+> This feature is only supported for `v1` version of the API.
 
 Rate limiting is implemented on the basis of a specific client's secret token. By default, 1,000 requests per hour can be made per secret token.
 
