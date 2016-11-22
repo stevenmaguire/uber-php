@@ -111,25 +111,25 @@ class Client
      * The Reminders endpoint allows you to remove any reminder in the pending
      * state from being sent.
      *
-     * @param    string   $reminder_id  Reminder id
+     * @param    string   $reminderId   Reminder id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function cancelReminder($reminder_id)
+    public function cancelReminder($reminderId)
     {
-        return $this->request('delete', 'reminders/'.$reminder_id);
+        return $this->request('delete', 'reminders/'.$reminderId);
     }
 
     /**
      * Cancel a single request
      *
-     * @param    string   $request_id    Request id
+     * @param    string   $requestId    Request id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function cancelRequest($request_id)
+    public function cancelRequest($requestId)
     {
-        return $this->request('delete', 'requests/'.$request_id);
+        return $this->request('delete', 'requests/'.$requestId);
     }
 
     /**
@@ -207,7 +207,7 @@ class Client
      */
     public function getCurrentRequest()
     {
-        return $this->request('get', 'requests/current');
+        return $this->getRequest('current');
     }
 
     /**
@@ -247,13 +247,13 @@ class Client
      *
      * Only home and work are acceptable.
      *
-     * @param    string   $place_id     Place id
+     * @param    string   $placeId      Place id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getPlace($place_id)
+    public function getPlace($placeId)
     {
-        return $this->request('get', 'places/'.$place_id);
+        return $this->request('get', 'places/'.$placeId);
     }
 
     /**
@@ -274,13 +274,13 @@ class Client
     /**
      * Get a single product
      *
-     * @param    string   $product_id    Product id
+     * @param    string   $productId    Product id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getProduct($product_id)
+    public function getProduct($productId)
     {
-        return $this->request('get', 'products/'.$product_id);
+        return $this->request('get', 'products/'.$productId);
     }
 
     /**
@@ -330,13 +330,13 @@ class Client
      * The Reminders endpoint allows you to get the status of an existing ride
      * reminder.
      *
-     * @param    string   $reminder_id  Reminder id
+     * @param    string   $reminderId   Reminder id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getReminder($reminder_id)
+    public function getReminder($reminderId)
     {
-        return $this->request('get', 'reminders/'.$reminder_id);
+        return $this->request('get', 'reminders/'.$reminderId);
     }
 
     /**
@@ -358,37 +358,37 @@ class Client
     /**
      * Get a single request
      *
-     * @param    string   $request_id    Request id
+     * @param    string   $requestId    Request id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getRequest($request_id)
+    public function getRequest($requestId)
     {
-        return $this->request('get', 'requests/'.$request_id);
+        return $this->request('get', 'requests/'.$requestId);
     }
 
     /**
      * Get the receipt information of the completed request.
      *
-     * @param    string   $request_id    Request id
+     * @param    string   $requestId    Request id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getRequestReceipt($request_id)
+    public function getRequestReceipt($requestId)
     {
-        return $this->request('get', 'requests/'.$request_id.'/receipt');
+        return $this->request('get', 'requests/'.$requestId.'/receipt');
     }
 
     /**
      * Get a single request map
      *
-     * @param    string   $request_id    Request id
+     * @param    string   $requestId    Request id
      *
      * @return   stdClass               The JSON response from the request
      */
-    public function getRequestMap($request_id)
+    public function getRequestMap($requestId)
     {
-        return $this->request('get', 'requests/'.$request_id.'/map');
+        return $this->request('get', 'requests/'.$requestId.'/map');
     }
 
     /**
@@ -540,7 +540,7 @@ class Client
      */
     public function setCurrentRequest($attributes = [])
     {
-        return $this->request('put', 'requests/current', $attributes);
+        return $this->setRequest('current', $attributes);
     }
 
     /**
@@ -562,14 +562,14 @@ class Client
      *
      * Only home and work are acceptable.
      *
-     * @param string $place_id
+     * @param string $placeId
      * @param array $attributes
      *
      * @return  stdClass
      */
-    public function setPlace($place_id, $attributes = [])
+    public function setPlace($placeId, $attributes = [])
     {
-        return $this->request('put', 'places/'.$place_id, $attributes);
+        return $this->request('put', 'places/'.$placeId, $attributes);
     }
 
     /**
@@ -587,53 +587,75 @@ class Client
     /**
      * The Reminders endpoint allows you to update an existing reminder.
      *
-     * @param string $reminder_id
+     * @param string $reminderId
      * @param array $attributes
      *
      * @return  stdClass
      */
-    public function setReminder($reminder_id, $attributes = [])
+    public function setReminder($reminderId, $attributes = [])
     {
-        return $this->request('put', 'reminders/'.$reminder_id, $attributes);
+        return $this->request('put', 'reminders/'.$reminderId, $attributes);
     }
 
     /**
      * The Ride Request endpoint allows updating an ongoing request’s
      * destination using the Ride Request endpoint.
      *
-     * @param string $request_id
+     * @param string $requestId
      * @param array $attributes
      *
      * @return  stdClass
      */
-    public function setRequest($request_id, $attributes = [])
+    public function setRequest($requestId, $attributes = [])
     {
-        return $this->request('put', 'requests/'.$request_id, $attributes);
+        return $this->request('put', 'requests/'.$requestId, $attributes);
     }
 
     /**
      * Set product properties for sandbox responses
      *
-     * @param string $product_id
+     * @param string $productId
      * @param array $attributes
      *
      * @return  stdClass
      */
-    public function setSandboxProduct($product_id, $attributes = [])
+    public function setSandboxProduct($productId, $attributes = [])
     {
-        return $this->request('put', 'sandbox/products/'.$product_id, $attributes);
+        $this->enforceSandboxExpectation();
+
+        return $this->request('put', 'sandbox/products/'.$productId, $attributes);
     }
 
     /**
      * Set request properties for sandbox responses
      *
-     * @param string $request_id
+     * @param string $requestId
      * @param array $attributes
      *
      * @return  stdClass
      */
-    public function setSandboxRequest($request_id, $attributes = [])
+    public function setSandboxRequest($requestId, $attributes = [])
     {
-        return $this->request('put', 'sandbox/requests/'.$request_id, $attributes);
+        $this->enforceSandboxExpectation();
+
+        return $this->request('put', 'sandbox/requests/'.$requestId, $attributes);
+    }
+
+    /**
+     * Throws exception when client is not configured sandbox use. Should only
+     * be utilized when attempting to do work against ephemeral sandbox API
+     * data.
+     *
+     * @see    https://developer.uber.com/docs/riders/guides/sandbox
+     * @return void
+     * @throws Exception
+     */
+    private function enforceSandboxExpectation($message = null)
+    {
+        if (!$this->use_sandbox) {
+            $message = $message ?: 'Attempted to invoke sandbox functionality '.
+                'with production client; this is not recommended';
+            throw new Exception($message);
+        }
     }
 }

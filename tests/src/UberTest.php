@@ -21,7 +21,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         ]);
     }
 
-    public function test_Configuration()
+    public function testConfiguration()
     {
         $client = new Uber([
             'access_token'  =>  getenv('UBER_ACCESS_TOKEN'),
@@ -38,7 +38,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($client->getLocale(), getenv('UBER_LOCALE'));
     }
 
-    public function test_Configuration_Defaults()
+    public function testConfigurationDefaults()
     {
         $client = new Uber();
 
@@ -52,7 +52,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */
-    public function test_Configuration_Will_Not_Accept_Non_Property_Config()
+    public function testConfigurationWillNotAcceptNonPropertyConfig()
     {
         $client = new Uber([
             'non_existent_property'  =>  'test',
@@ -61,7 +61,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $client->getNonExistentProperty();
     }
 
-    public function test_Url_Includes_Version()
+    public function testUrlIncludesVersion()
     {
         $version = uniqid();
         $this->client->setVersion($version);
@@ -71,7 +71,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertContains($version, $url);
     }
 
-    public function test_Url_Omits_Version_When_Not_Provided()
+    public function testUrlOmitsVersionWhenNotProvided()
     {
         $this->client->setVersion(null);
 
@@ -80,7 +80,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertStringEndsNotWith('//', $url);
     }
 
-    public function test_Headers_Include_Bearer_When_Access_Token_Provided()
+    public function testHeadersIncludeBearerWhenAccessTokenProvided()
     {
         $access_token = uniqid();
         $this->client->setAccessToken($access_token);
@@ -91,7 +91,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Bearer '.$access_token, $headers['Authorization']);
     }
 
-    public function test_Headers_Include_Token_When_Access_Token_Not_Provided()
+    public function testHeadersIncludeTokenWhenAccessTokenNotProvided()
     {
         $server_token = uniqid();
         $this->client->setServerToken($server_token)->setAccessToken(null);
@@ -102,7 +102,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Token '.$server_token, $headers['Authorization']);
     }
 
-    public function test_Headers_Include_Empty_Token_When_Access_And_Server_Token_Not_Provided()
+    public function testHeadersIncludeEmptyTokenWhenAccessAndServerTokenNotProvided()
     {
         $this->client->setServerToken(null)->setAccessToken(null);
 
@@ -112,7 +112,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Token', $headers['Authorization']);
     }
 
-    public function test_Headers_Include_AcceptLanguage_When_Locale_Provided()
+    public function testHeadersIncludeAcceptLanguageWhenLocaleProvided()
     {
         $locale = $this->client->getLocale();
 
@@ -122,7 +122,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($locale, $headers['Accept-Language']);
     }
 
-    public function test_Headers_Include_Empty_AcceptLanguage_When_Locale_Not_Provided()
+    public function testHeadersIncludeEmptyAcceptLanguageWhenLocaleNotProvided()
     {
         $headers = $this->client->setLocale(null)->getHeaders();
 
@@ -130,7 +130,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($headers['Accept-Language']);
     }
 
-    public function test_Get_Payment_Methods()
+    public function testGetPaymentMethods()
     {
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"payment_methods": [{"payment_method_id": "5f384f7d-8323-4207-a297-51c571234a8c","type": "baidu_wallet","description": "***53",},{"payment_method_id": "f33847de-8113-4587-c307-51c2d13a823c","type": "alipay","description": "ga***@uber.com",},{"payment_method_id": "f43847de-8113-4587-c307-51c2d13a823c","type": "visa","description": "***23"},{"payment_method_id": "517a6c29-3a2b-45cb-94a3-35d679909a71","type": "american_express","description": "***05"},{"payment_method_id": "f53847de-8113-4587-c307-51c2d13a823c","type": "business_account","description": "Late Night Ride"}],"last_used": "f53847de-8113-4587-c307-51c2d13a823c"}');
@@ -146,7 +146,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $product = $this->client->getPaymentMethods();
     }
 
-    public function test_Get_Place()
+    public function testGetPlace()
     {
         $place_id = 'mock_place_id';
 
@@ -164,7 +164,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $product = $this->client->getPlace($place_id);
     }
 
-    public function test_Get_Products()
+    public function testGetProducts()
     {
         $params = [
             'latitude' => '41.85582993',
@@ -188,7 +188,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($this->client->getAccessToken());
     }
 
-    public function test_Get_Product()
+    public function testGetProduct()
     {
         $product_id = 'mock_product_id';
 
@@ -206,7 +206,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $product = $this->client->getProduct($product_id);
     }
 
-    public function test_Get_Price_Estimates()
+    public function testGetPriceEstimates()
     {
         $params = [
             'start_latitude' => '41.85582993',
@@ -229,7 +229,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $estimates = $this->client->getPriceEstimates($params);
     }
 
-    public function test_Get_Reminder()
+    public function testGetReminder()
     {
         $reminder_id = 'mock_reminder_id';
 
@@ -247,7 +247,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $reminder = $this->client->getReminder($reminder_id);
     }
 
-    public function test_Get_Time_Estimates()
+    public function testGetTimeEstimates()
     {
         $params = [
             'start_latitude' => '41.85582993',
@@ -268,7 +268,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $estimates = $this->client->getTimeEstimates($params);
     }
 
-    public function test_Get_Promotions()
+    public function testGetPromotions()
     {
         $params = [
             'start_latitude' => '41.85582993',
@@ -291,7 +291,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $promotions = $this->client->getPromotions($params);
     }
 
-    public function test_Get_History()
+    public function testGetHistory()
     {
         $params = [
             'limit' => 1,
@@ -314,7 +314,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $history = $this->client->getHistory($params);
     }
 
-    public function test_Get_Profile_with_Rate_Limit_Headers()
+    public function testGetProfilewithRateLimitHeaders()
     {
         $rateLimitHeaders = [1000, 955, strtotime("+1 day")];
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
@@ -335,7 +335,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($rateLimit->getReset(), $rateLimitHeaders[2]);
     }
 
-    public function test_Get_Profile_without_Rate_Limit_Headers()
+    public function testGetProfilewithoutRateLimitHeaders()
     {
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"first_name": "Uber","last_name": "Developer","email": "developer@uber.com","picture": "https://...","promo_code": "teypo","uuid": "91d81273-45c2-4b57-8124-d0165f8240c0"}');
@@ -353,7 +353,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($rateLimit);
     }
 
-    public function test_Get_Request_Estimate()
+    public function testGetRequestEstimate()
     {
         $params = [
             'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
@@ -377,7 +377,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $requestEstimate = $this->client->getRequestEstimate($params);
     }
 
-    public function test_Request_Ride()
+    public function testRequestRide()
     {
         $params = [
             'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
@@ -403,7 +403,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->requestRide($params);
     }
 
-    public function test_Create_Reminder()
+    public function testCreateReminder()
     {
         $params = [
             'reminder_time' => '1429294463',
@@ -436,7 +436,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $reminder = $this->client->createReminder($params);
     }
 
-    public function test_Get_Current_Request()
+    public function testGetCurrentRequest()
     {
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"request_id": "","status": "processing","vehicle": null,"driver": null,"location": null,"eta": 5,"surge_multiplier": null}');
@@ -452,7 +452,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->getCurrentRequest();
     }
 
-    public function test_Get_Request()
+    public function testGetRequest()
     {
         $request_id = 'mock_request_id';
 
@@ -470,7 +470,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->getRequest($request_id);
     }
 
-    public function test_Get_Request_Receipt()
+    public function testGetRequestReceipt()
     {
         $request_id = 'mock_request_id';
 
@@ -506,7 +506,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $map = $this->client->getRequestMap($request_id);
     }
 
-    public function test_Cancel_Current_Request()
+    public function testCancelCurrentRequest()
     {
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
@@ -522,7 +522,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $cancel_request = $this->client->cancelCurrentRequest();
     }
 
-    public function test_Cancel_Reminder()
+    public function testCancelReminder()
     {
         $reminderId = uniqid();
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
@@ -539,7 +539,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $cancel_reminder = $this->client->cancelReminder($reminderId);
     }
 
-    public function test_Cancel_Request()
+    public function testCancelRequest()
     {
         $request_id = 'mock_request_id';
 
@@ -557,14 +557,14 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $cancel_request = $this->client->cancelRequest($request_id);
     }
 
-    public function test_Get_Existing_Properties()
+    public function testGetExistingProperties()
     {
         $locale = $this->client->getLocale();
 
         $this->assertEquals($locale, getenv('UBER_LOCALE'));
     }
 
-    public function test_Set_Current_Request()
+    public function testSetCurrentRequest()
     {
         $request_body = ['status' => uniqid()];
 
@@ -582,7 +582,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setCurrentRequest($request_body);
     }
 
-    public function test_Set_Reminder()
+    public function testSetReminder()
     {
         $reminderId = uniqid();
         $params = [
@@ -616,10 +616,12 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $reminder = $this->client->setReminder($reminderId, $params);
     }
 
-    public function test_Set_Sandbox_Request()
+    public function testSetSandboxRequestSucceedsInSandboxMode()
     {
         $request_id = 'mock_request_id';
         $request_body = ['status' => uniqid()];
+
+        $this->client->setUseSandbox(true);
 
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
@@ -635,7 +637,20 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setSandboxRequest($request_id, $request_body);
     }
 
-    public function test_Set_Request()
+    /**
+     * @expectedException Stevenmaguire\Uber\Exception
+     */
+    public function testSetSandboxRequestFailsOutOfSandboxMode()
+    {
+        $request_id = 'mock_request_id';
+        $request_body = ['status' => uniqid()];
+
+        $this->client->setUseSandbox(false);
+
+        $request = $this->client->setSandboxRequest($request_id, $request_body);
+    }
+
+    public function testSetRequest()
     {
         $request_id = 'mock_request_id';
         $request_body = ['status' => uniqid()];
@@ -654,7 +669,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setRequest($request_id, $request_body);
     }
 
-    public function test_Set_Place()
+    public function testSetPlace()
     {
         $placeId = 'home';
         $request_body = ['address' => uniqid()];
@@ -673,10 +688,12 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setPlace($placeId, $request_body);
     }
 
-    public function test_Set_Sandbox_Product()
+    public function testSetSandboxProductSucceedsInSandboxMode()
     {
         $product_id = 'mock_request_id';
         $request_body = ['surge_multiplier' => uniqid()];
+
+        $this->client->setUseSandbox(true);
 
         $getResponse = m::mock('GuzzleHttp\Psr7\Response');
         $getResponse->shouldReceive('getBody')->times(1)->andReturn(null);
@@ -692,7 +709,20 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $request = $this->client->setSandboxProduct($product_id, $request_body);
     }
 
-    public function test_Set_Profile()
+    /**
+     * @expectedException Stevenmaguire\Uber\Exception
+     */
+    public function testSetSandboxProductFailsOutOfSandboxMode()
+    {
+        $product_id = 'mock_request_id';
+        $request_body = ['surge_multiplier' => uniqid()];
+
+        $this->client->setUseSandbox(false);
+
+        $request = $this->client->setSandboxProduct($product_id, $request_body);
+    }
+
+    public function testSetProfile()
     {
         $request_body = ['applied_promotion_codes' => uniqid()];
 
@@ -713,12 +743,12 @@ class UberTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */
-    public function test_Get_Non_Existing_Properties()
+    public function testGetNonExistingProperties()
     {
         $result = $this->client->{'get'.rand(1111,9999)}();
     }
 
-    public function test_Set_Existing_Properties()
+    public function testSetExistingProperties()
     {
         $var = uniqid();
         $locale = $this->client->setLocale($var)->getLocale();
@@ -729,7 +759,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */
-    public function test_Set_Non_Existing_Properties()
+    public function testSetNonExistingProperties()
     {
         $result = $this->client->{'set'.rand(1111,9999)}();
     }
@@ -737,7 +767,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException Stevenmaguire\Uber\Exception
      */
-    public function test_Throws_Exception_On_Http_Errors()
+    public function testThrowsExceptionOnHttpErrors()
     {
         $params = [];
         $responseCode = 429;
@@ -754,7 +784,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $this->client->getProducts($params);
     }
 
-    public function test_Http_Exceptions_Include_Meta_From_Uber()
+    public function testHttpExceptionsIncludeMetaFromUber()
     {
         $params = [];
         $responseCode = 409;
@@ -784,7 +814,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function test_Client_Exceptions_Throw_Uber_Exception()
+    public function testClientExceptionsThrowUberException()
     {
         $params = [];
         $exception = new HttpClientException(

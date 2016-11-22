@@ -196,7 +196,7 @@ $request = $client->getCurrentRequest();
 ### Get Ride Details
 
 ```php
-$request = $client->getRequest($request_id);
+$request = $client->getRequest($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-details](https://developer.uber.com/v1/endpoints/#request-details)
@@ -251,7 +251,7 @@ $requestEstimate = $client->getRequestEstimate(array(
 ### Get Ride Map
 
 ```php
-$map = $client->getRequestMap($request_id);
+$map = $client->getRequestMap($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-map](https://developer.uber.com/v1/endpoints/#request-map)
@@ -259,7 +259,7 @@ $map = $client->getRequestMap($request_id);
 ### Get Ride Receipt
 
 ```php
-$receipt = $client->getRequestReceipt($request_id);
+$receipt = $client->getRequestReceipt($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-receipt](https://developer.uber.com/v1/endpoints/#request-receipt)
@@ -275,7 +275,7 @@ $request = $client->cancelCurrentRequest();
 ### Cancel Ride
 
 ```php
-$request = $client->cancelRequest($request_id);
+$request = $client->cancelRequest($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-cancel](https://developer.uber.com/v1/endpoints/#request-cancel)
@@ -354,13 +354,13 @@ Rate limiting is implemented on the basis of a specific client's secret token. B
 When consuming the service with this package, your rate limit status will be made available within the client.
 
 ```php
-$product = $client->getProduct($product_id);
+$product = $client->getProduct($productId);
 
-$rate_limit = $client->getRateLimit();
+$rateLimit = $client->getRateLimit();
 
-$rate_limit->getLimit();        // Rate limit capacity per period
-$rate_limit->getRemaining();    // Requests remaining in current period
-$rate_limit->getReset();        // Timestamp in UTC time when the next period will begin
+$rateLimit->getLimit();        // Rate limit capacity per period
+$rateLimit->getRemaining();    // Requests remaining in current period
+$rateLimit->getReset();        // Timestamp in UTC time when the next period will begin
 ```
 These values will update after each request. `getRateLimit` will return null after the client is created and before the first successful request.
 
@@ -369,6 +369,8 @@ These values will update after each request. `getRateLimit` will return null aft
 ### Using the Sandbox
 
 Modify the status of an ongoing sandbox Request.
+
+> These methods will throw `Stevenmaguire\Uber\Exception` when invoked while the client is not in sandbox mode. The underlying API endpoints have no effect unless you are using the sandbox environment.
 
 ```php
 $request = $client->requestRide(array(
@@ -386,9 +388,9 @@ $updateRequest = $client->setSandboxRequest($request->request_id, ['status' => '
 Simulate the possible responses the Request endpoint will return when requesting a particular product, such as surge pricing, against the Sandbox.
 
 ```php
-$product = $client->getProduct($product_id);
+$product = $client->getProduct($productId);
 
-$updateProduct = $client->setSandboxProduct($product_id, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
+$updateProduct = $client->setSandboxProduct($productId, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
 ```
 
 [https://developer.uber.com/v1/sandbox/#product-types](https://developer.uber.com/v1/sandbox/#product-types)
