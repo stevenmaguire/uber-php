@@ -51,7 +51,7 @@ $products = $client->getProducts(array(
 #### By Id:
 
 ```php
-$product = $client->getProduct($product_id);
+$product = $client->getProduct($productId);
 ```
 
 [https://developer.uber.com/docs/riders/references/api/v1.2/products-product_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/products-product_id-get)
@@ -136,7 +136,6 @@ $paymentMethods = $client->getPaymentMethods();
 
 ```php
 $placeId = 'home';
-
 $place = $client->getPlace($placeId);
 ```
 
@@ -147,7 +146,6 @@ $place = $client->getPlace($placeId);
 ```php
 $placeId = 'home';
 $attributes = ['address' => '685 Market St, San Francisco, CA 94103, USA'];
-
 $place = $client->setPlace($placeId, $attributes);
 ```
 
