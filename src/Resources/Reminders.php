@@ -54,7 +54,7 @@ trait Reminders
     }
 
     /**
-     * Makes a request to the Uber API and returns the response
+     * Makes a request to the Uber API and returns the response.
      *
      * @param    string $verb       The Http verb to use
      * @param    string $path       The path of the APi after the domain

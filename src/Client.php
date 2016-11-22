@@ -65,9 +65,9 @@ class Client
     private $http_client;
 
     /**
-     * Create new client
+     * Creates a new client.
      *
-     * @param array $configuration
+     * @param    array    $configuration
      */
     public function __construct($configuration = [])
     {
@@ -77,11 +77,11 @@ class Client
     }
 
     /**
-     * Apply configuration
+     * Applies configuration to client.
      *
-     * @param  array $configuration
+     * @param   array     $configuration
      *
-     * @return void
+     * @return  void
      */
     private function applyConfiguration($configuration = [])
     {
@@ -91,9 +91,9 @@ class Client
     }
 
     /**
-     * Get authorization header value
+     * Gets authorization header value.
      *
-     * @return string
+     * @return   string
      */
     private function getAuthorizationHeader()
     {
@@ -105,12 +105,12 @@ class Client
     }
 
     /**
-     * Get HttpClient config for verb and parameters
+     * Gets HttpClient config for verb and parameters.
      *
-     * @param  string $verb
-     * @param  array  $parameters
+     * @param    string   $verb
+     * @param    array    $parameters
      *
-     * @return array
+     * @return   array
      */
     private function getConfigForVerbAndParameters($verb, $parameters = [])
     {
@@ -130,9 +130,9 @@ class Client
     }
 
     /**
-     * Get headers for request
+     * Gets headers for request.
      *
-     * @return array
+     * @return   array
      */
     public function getHeaders()
     {
@@ -143,11 +143,11 @@ class Client
     }
 
     /**
-     * Build url
+     * Builds url from path.
      *
-     * @param  string   $path
+     * @param    string   $path
      *
-     * @return string   Url
+     * @return   string   Url
      */
     public function getUrlFromPath($path)
     {
@@ -159,12 +159,12 @@ class Client
     }
 
     /**
-     * Handle http client exceptions
+     * Handles http client exceptions.
      *
-     * @param  HttpClientException $e
+     * @param    HttpClientException $e
      *
-     * @return void
-     * @throws Exception
+     * @return   void
+     * @throws   Exception
      */
     private function handleRequestException(HttpClientException $e)
     {
@@ -179,11 +179,11 @@ class Client
     }
 
     /**
-     * Parse configuration using defaults
+     * Parses configuration using defaults.
      *
-     * @param  array $configuration
+     * @param    array    $configuration
      *
-     * @return array $configuration
+     * @return   array    $configuration
      */
     private function parseConfiguration($configuration = [])
     {
@@ -199,11 +199,11 @@ class Client
     }
 
     /**
-     * Attempt to pull rate limit headers from response and add to client
+     * Attempts to pull rate limit headers from response and add to client.
      *
-     * @param  Response  $response
+     * @param    Response $response
      *
-     * @return void
+     * @return   void
      */
     private function parseRateLimitFromResponse(Response $response)
     {
@@ -220,13 +220,13 @@ class Client
     }
 
     /**
-     * Makes a request to the Uber API and returns the response
+     * Makes a request to the Uber API and returns the response.
      *
-     * @param    string $verb       The Http verb to use
-     * @param    string $path       The path of the APi after the domain
-     * @param    array  $parameters Parameters
+     * @param    string   $verb       The Http verb to use
+     * @param    string   $path       The path of the APi after the domain
+     * @param    array    $parameters Parameters
      *
-     * @return   stdClass The JSON response from the request
+     * @return   stdClass             The JSON response from the request
      * @throws   Exception
      */
     protected function request($verb, $path, $parameters = [])
@@ -248,11 +248,11 @@ class Client
     }
 
     /**
-     * Set Http Client
+     * Sets Http Client.
      *
-     * @param HttpClient  $client
+     * @param    HttpClient  $client
      *
-     * @return Client
+     * @return   Client
      */
     public function setHttpClient(HttpClient $client)
     {
@@ -265,9 +265,10 @@ class Client
      * be utilized when attempting to do work against ephemeral sandbox API
      * data.
      *
-     * @see    https://developer.uber.com/docs/riders/guides/sandbox
-     * @return void
-     * @throws Exception
+     * @return   void
+     * @throws   Exception
+     *
+     * @see      https://developer.uber.com/docs/riders/guides/sandbox
      */
     private function enforceSandboxExpectation($message = null)
     {
