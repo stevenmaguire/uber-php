@@ -155,14 +155,30 @@ $place = $client->setPlace($placeId, $attributes);
 
 ```php
 $request = $client->requestRide(array(
-    'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939',
     'start_latitude' => '41.85582993',
     'start_longitude' => '-87.62730337',
     'end_latitude' => '41.87499492',
     'end_longitude' => '-87.67126465',
-    'surge_confirmation_id' => 'e100a670' // Optional
+    'product_id' => '4bfc6c57-98c0-424f-a72e-c1e2a1d49939', // Optional
+    'surge_confirmation_id' => 'e100a670',                  // Optional
+    'payment_method_id' => 'a1111c8c-c720-46c3-8534-2fcd'   // Optional
 ));
 ```
+
+#### Upfront Fares
+
+Upfront fares means the total fare is known before the ride is taken.
+
+- An end location is required
+- There is no surge confirmation flow
+- The user should specify a fare_id to confirm consent to the upfront fare
+- The user should specify the number of seats that are required for shared products (like UberPOOL)
+
+1. In the products endpoint `GET /products`, products will have the `upfront_fare_enabled` field set to `true`.
+2. Use the ride request estimate endpoint `POST /requests/estimate` with the `product_id` to get a `fare_id`. The `fare_id` can be used to lock down an upfront fare and arrival time for a trip. The `fare_id` expires after two minutes. If the `fare_id` is expired or not valid, we return a 422 error.
+3. Request the ride using the ride request endpoint `POST /requests` with the `fare_id` returned in the previous step.
+
+[https://developer.uber.com/docs/riders/ride-requests/tutorials/api/best-practices#upfront-fares](https://developer.uber.com/docs/riders/ride-requests/tutorials/api/best-practices#upfront-fares)
 
 #### Surge Confirmation Flow
 
@@ -183,7 +199,7 @@ try {
 }
 ```
 
-[https://developer.uber.com/v1/endpoints/#request](https://developer.uber.com/v1/endpoints/#request)
+[https://developer.uber.com/docs/riders/ride-requests/tutorials/api/best-practices#handling-surge-pricing](https://developer.uber.com/docs/riders/ride-requests/tutorials/api/best-practices#handling-surge-pricing)
 
 ### Get Current Ride Details
 
