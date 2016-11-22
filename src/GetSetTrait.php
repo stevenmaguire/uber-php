@@ -22,10 +22,12 @@ trait GetSetTrait
         } elseif ($this->isSetMethod($method)) {
             $property = $this->convertMethodToProperty($method);
 
-            return $this->updateAttribute($property, $parameters[0]);
+            if (property_exists($this, $property)) {
+                return $this->updateAttribute($property, $parameters[0]);
+            }
         } // @codeCoverageIgnore
 
-        throw new Exception('Method not implemented');
+        throw new Exception($method . ' method not implemented');
     }
 
     /**

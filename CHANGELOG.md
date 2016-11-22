@@ -1,6 +1,37 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.5.0 - 2016-11-21
+
+### Added
+- Update rate limit parser to fail gracefully when no headers returned, as is expected in Uber API v1.2
+- Update default api version to v1.2
+- Add profile patch support
+- Add payment methods list support
+- Add place detail support
+- Add update place support
+- Add current ride request detail support
+- Add update current ride request support
+- Update sandbox method names to include intent
+- Add update specific request support
+- Add create reminder support
+- Add fetch reminder support
+- Add update reminder support
+- Add cancel reminder support
+- Add raised exception when invoking sandbox methods on non-sandbox client
+
+### Deprecated
+- Removed `setProduct` method, replaced with `setSandboxProduct`
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.4.0 - 2015-07-08
 
 ### Added

@@ -30,7 +30,7 @@ $client = new Stevenmaguire\Uber\Client(array(
     'access_token' => 'YOUR ACCESS TOKEN',
     'server_token' => 'YOUR SERVER TOKEN',
     'use_sandbox'  => true, // optional, default false
-    'version'      => 'v1', // optional, default 'v1'
+    'version'      => 'v1.2', // optional, default 'v1.2'
     'locale'       => 'en_US', // optional, default 'en_US'
 ));
 ```
@@ -104,7 +104,6 @@ $history = $client->getHistory(array(
 ```
 
 [https://developer.uber.com/v1/endpoints/#user-activity-v1-1](https://developer.uber.com/v1/endpoints/#user-activity-v1-1)
-[https://developer.uber.com/v1/endpoints/#user-activity-v1-2](https://developer.uber.com/v1/endpoints/#user-activity-v1-2)
 
 ### Get User Profile
 
@@ -113,6 +112,44 @@ $profile = $client->getProfile();
 ```
 
 [https://developer.uber.com/v1/endpoints/#user-profile](https://developer.uber.com/v1/endpoints/#user-profile)
+
+### Update User Profile
+
+```php
+$attributes = ['applied_promotion_codes' => 'PROMO_CODE'];
+$profileResponse = $client->setProfile($attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/me-patch](https://developer.uber.com/docs/riders/references/api/v1.2/me-patch)
+
+### Get Payment Methods
+
+```php
+$paymentMethods = $client->getPaymentMethods();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get](https://developer.uber.com/docs/riders/references/api/v1.2/payment-methods-get)
+
+### Get Place
+
+```php
+$placeId = 'home';
+
+$place = $client->getPlace($placeId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-get)
+
+### Update a Place
+
+```php
+$placeId = 'home';
+$attributes = ['address' => '685 Market St, San Francisco, CA 94103, USA'];
+
+$place = $client->setPlace($placeId, $attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-put](https://developer.uber.com/docs/riders/references/api/v1.2/places-place_id-put)
 
 ### Request A Ride
 
@@ -148,13 +185,54 @@ try {
 
 [https://developer.uber.com/v1/endpoints/#request](https://developer.uber.com/v1/endpoints/#request)
 
+### Get Current Ride Details
+
+```php
+$request = $client->getCurrentRequest();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-get](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-get)
+
 ### Get Ride Details
 
 ```php
-$request = $client->getRequest($request_id);
+$request = $client->getRequest($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-details](https://developer.uber.com/v1/endpoints/#request-details)
+
+### Update Current Ride Details
+
+```php
+$requestDetails = array(
+    'end_address' => '685 Market St, San Francisco, CA 94103, USA',
+    'end_nickname' => 'da crib',
+    'end_place_id' => 'home',
+    'end_latitude' => '41.87499492',
+    'end_longitude' => '-87.67126465'
+);
+
+$updateRequest = $client->setCurrentRequest($requestDetails);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-patch](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-patch)
+
+### Update Ride Details
+
+```php
+$requestId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939'
+$requestDetails = array(
+    'end_address' => '685 Market St, San Francisco, CA 94103, USA',
+    'end_nickname' => 'da crib',
+    'end_place_id' => 'home',
+    'end_latitude' => '41.87499492',
+    'end_longitude' => '-87.67126465'
+);
+
+$updateRequest = $client->setRequest($requestId, $requestDetails);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-request_id-patch](https://developer.uber.com/docs/riders/references/api/v1.2/requests-request_id-patch)
 
 ### Get Ride Estimate
 
@@ -173,7 +251,7 @@ $requestEstimate = $client->getRequestEstimate(array(
 ### Get Ride Map
 
 ```php
-$map = $client->getRequestMap($request_id);
+$map = $client->getRequestMap($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-map](https://developer.uber.com/v1/endpoints/#request-map)
@@ -181,33 +259,110 @@ $map = $client->getRequestMap($request_id);
 ### Get Ride Receipt
 
 ```php
-$receipt = $client->getRequestReceipt($request_id);
+$receipt = $client->getRequestReceipt($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-receipt](https://developer.uber.com/v1/endpoints/#request-receipt)
 
+### Cancel Current Ride
+
+```php
+$request = $client->cancelCurrentRequest();
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-delete](https://developer.uber.com/docs/riders/references/api/v1.2/requests-current-delete)
+
 ### Cancel Ride
 
 ```php
-$request = $client->cancelRequest($request_id);
+$request = $client->cancelRequest($requestId);
 ```
 
 [https://developer.uber.com/v1/endpoints/#request-cancel](https://developer.uber.com/v1/endpoints/#request-cancel)
 
+### Create Reminder
+
+```php
+$attributes = [
+    'reminder_time' => '1429294463',
+    'phone_number' => '555-555-5555',
+    'event' => [
+        'time' => '1429294463',
+        'name' => 'Frisbee with friends',
+        'location' => 'Dolores Park',
+        'latitude' => '37.759773',
+        'longitude' => '-122.427063',
+    ],
+    'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+    'trip_branding' => [
+        'link_text' => 'View team roster',
+        'partner_deeplink' => 'partner://team/9383',
+    ]
+];
+$reminder = $client->createReminder($attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-post](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-post)
+
+### Get Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$reminder = $client->getReminder($reminderId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-get](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-get)
+
+### Update Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$attributes = [
+    'reminder_time' => '1429294463',
+    'phone_number' => '555-555-5555',
+    'event' => [
+        'time' => '1429294463',
+        'name' => 'Frisbee with friends',
+        'location' => 'Dolores Park',
+        'latitude' => '37.759773',
+        'longitude' => '-122.427063',
+    ],
+    'product_id' => 'a1111c8c-c720-46c3-8534-2fcdd730040d',
+    'trip_branding' => [
+        'link_text' => 'View team roster',
+        'partner_deeplink' => 'partner://team/9383',
+    ]
+];
+$reminder = $client->setReminder($reminderId, $attributes);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-patch](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-patch)
+
+### Cancel Reminder
+
+```php
+$reminderId = '4bfc6c57-98c0-424f-a72e-c1e2a1d49939';
+$reminder = $client->cancelReminder($reminderId);
+```
+
+[https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete)
+
 ### Rate Limiting
+
+> This feature is only supported for `v1` version of the API.
 
 Rate limiting is implemented on the basis of a specific client's secret token. By default, 1,000 requests per hour can be made per secret token.
 
 When consuming the service with this package, your rate limit status will be made available within the client.
 
 ```php
-$product = $client->getProduct($product_id);
+$product = $client->getProduct($productId);
 
-$rate_limit = $client->getRateLimit();
+$rateLimit = $client->getRateLimit();
 
-$rate_limit->getLimit();        // Rate limit capacity per period
-$rate_limit->getRemaining();    // Requests remaining in current period
-$rate_limit->getReset();        // Timestamp in UTC time when the next period will begin
+$rateLimit->getLimit();        // Rate limit capacity per period
+$rateLimit->getRemaining();    // Requests remaining in current period
+$rateLimit->getReset();        // Timestamp in UTC time when the next period will begin
 ```
 These values will update after each request. `getRateLimit` will return null after the client is created and before the first successful request.
 
@@ -216,6 +371,8 @@ These values will update after each request. `getRateLimit` will return null aft
 ### Using the Sandbox
 
 Modify the status of an ongoing sandbox Request.
+
+> These methods will throw `Stevenmaguire\Uber\Exception` when invoked while the client is not in sandbox mode. The underlying API endpoints have no effect unless you are using the sandbox environment.
 
 ```php
 $request = $client->requestRide(array(
@@ -226,16 +383,16 @@ $request = $client->requestRide(array(
     'end_longitude' => '-87.67126465'
 ));
 
-$updateRequest = $client->setRequest($request->request_id, ['status' => 'accepted']);
+$updateRequest = $client->setSandboxRequest($request->request_id, ['status' => 'accepted']);
 ```
 [https://developer.uber.com/v1/sandbox/#request](https://developer.uber.com/v1/sandbox/#request)
 
 Simulate the possible responses the Request endpoint will return when requesting a particular product, such as surge pricing, against the Sandbox.
 
 ```php
-$product = $client->getProduct($product_id);
+$product = $client->getProduct($productId);
 
-$updateProduct = $client->setProduct($product_id, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
+$updateProduct = $client->setSandboxProduct($productId, ['surge_multiplier' => 2.2, 'drivers_available' => false]);
 ```
 
 [https://developer.uber.com/v1/sandbox/#product-types](https://developer.uber.com/v1/sandbox/#product-types)
