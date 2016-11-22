@@ -121,6 +121,18 @@ trait Requests
     }
 
     /**
+     * Makes a request to the Uber API and returns the response
+     *
+     * @param    string $verb       The Http verb to use
+     * @param    string $path       The path of the APi after the domain
+     * @param    array  $parameters Parameters
+     *
+     * @return   stdClass The JSON response from the request
+     * @throws   Exception
+     */
+    abstract protected function request($verb, $path, $parameters = []);
+
+    /**
      * Creates a new ride request.
      *
      * The Request endpoint allows a ride to be requested on behalf of an Uber

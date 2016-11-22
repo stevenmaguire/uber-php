@@ -229,7 +229,7 @@ class Client
      * @return   stdClass The JSON response from the request
      * @throws   Exception
      */
-    private function request($verb, $path, $parameters = [])
+    protected function request($verb, $path, $parameters = [])
     {
         $client = $this->http_client;
         $url = $this->getUrlFromPath($path);
