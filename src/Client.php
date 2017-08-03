@@ -62,7 +62,7 @@ class Client
      *
      * @var HttpClient
      */
-    private $http_client;
+    private $httpClient;
 
     /**
      * Creates a new client.
@@ -73,7 +73,7 @@ class Client
     {
         $configuration = $this->parseConfiguration($configuration);
         $this->applyConfiguration($configuration);
-        $this->http_client = new HttpClient;
+        $this->httpClient = new HttpClient;
     }
 
     /**
@@ -231,7 +231,7 @@ class Client
      */
     protected function request($verb, $path, $parameters = [])
     {
-        $client = $this->http_client;
+        $client = $this->httpClient;
         $url = $this->getUrlFromPath($path);
         $verb = strtolower($verb);
         $config = $this->getConfigForVerbAndParameters($verb, $parameters);
@@ -256,7 +256,7 @@ class Client
      */
     public function setHttpClient(HttpClient $client)
     {
-        $this->http_client = $client;
+        $this->httpClient = $client;
         return $this;
     }
 

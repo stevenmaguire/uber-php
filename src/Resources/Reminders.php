@@ -79,6 +79,6 @@ trait Reminders
      */
     public function setReminder($reminderId, $attributes = [])
     {
-        return $this->request('put', 'reminders/'.$reminderId, $attributes);
+        return $this->request('patch', 'reminders/'.$reminderId, $attributes);
     }
 }

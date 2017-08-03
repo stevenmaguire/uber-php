@@ -1,6 +1,23 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.5.1 - 2017-08-03
+
+### Added
+- Nothing
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Incorrect verb used for updating exsiting entities.
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.5.0 - 2016-11-21
 
 ### Added

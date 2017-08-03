@@ -573,7 +573,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
 
         $http_client = m::mock('GuzzleHttp\Client');
-        $http_client->shouldReceive('put')
+        $http_client->shouldReceive('patch')
             ->with($this->client->getUrlFromPath('/requests/current'), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
             ->times(1)->andReturn($getResponse);
 
@@ -607,7 +607,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $postResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
 
         $http_client = m::mock('GuzzleHttp\Client');
-        $http_client->shouldReceive('put')
+        $http_client->shouldReceive('patch')
             ->with($this->client->getUrlFromPath('/reminders/'.$reminderId), ['headers' => $this->client->getHeaders(), 'json' => $params])
             ->times(1)->andReturn($postResponse);
 
@@ -660,7 +660,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
 
         $http_client = m::mock('GuzzleHttp\Client');
-        $http_client->shouldReceive('put')
+        $http_client->shouldReceive('patch')
             ->with($this->client->getUrlFromPath('/requests/'.$request_id), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
             ->times(1)->andReturn($getResponse);
 
@@ -731,7 +731,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $getResponse->shouldReceive('getHeader')->times(3)->andReturn(null);
 
         $http_client = m::mock('GuzzleHttp\Client');
-        $http_client->shouldReceive('put')
+        $http_client->shouldReceive('patch')
             ->with($this->client->getUrlFromPath('/me'), ['headers' => $this->client->getHeaders(), 'json' => $request_body])
             ->times(1)->andReturn($getResponse);
 

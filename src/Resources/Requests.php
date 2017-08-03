@@ -187,7 +187,7 @@ trait Requests
      */
     public function setRequest($requestId, $attributes = [])
     {
-        return $this->request('put', 'requests/'.$requestId, $attributes);
+        return $this->request('patch', 'requests/'.$requestId, $attributes);
     }
 
     /**

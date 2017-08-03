@@ -118,6 +118,6 @@ trait Riders
      */
     public function setProfile($attributes = [])
     {
-        return $this->request('put', 'me', $attributes);
+        return $this->request('patch', 'me', $attributes);
     }
 }
