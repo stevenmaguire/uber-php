@@ -10,7 +10,7 @@ All Notable changes to `uber-php` will be documented in this file
 - Nothing
 
 ### Fixed
-- Incorrect verb used for updating exsiting entities.
+- Updated incorrect verb used for updating exsiting entities.
 
 ### Removed
 - Nothing
