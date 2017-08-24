@@ -1,6 +1,23 @@
 # Changelog
 All Notable changes to `uber-php` will be documented in this file
 
+## 1.6.0 - 2017-08-23
+
+### Added
+- Support for driver endpoints
+
+### Deprecated
+- Nothing
+
+### Fixed
+- Nothing
+
+### Removed
+- Nothing
+
+### Security
+- Nothing
+
 ## 1.5.1 - 2017-08-03
 
 ### Added

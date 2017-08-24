@@ -8,6 +8,7 @@ use ReflectionClass;
 class Client
 {
     use GetSetTrait;
+    use Resources\Drivers;
     use Resources\Estimates;
     use Resources\Products;
     use Resources\Promotions;

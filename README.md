@@ -363,6 +363,30 @@ $reminder = $client->cancelReminder($reminderId);
 
 [https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete](https://developer.uber.com/docs/riders/references/api/v1.2/reminders-reminder_id-delete)
 
+### Get Driver Profile
+
+```php
+$profile = $client->getDriverProfile();
+```
+
+[https://developer.uber.com/docs/drivers/references/api/v1/partners-me-get](https://developer.uber.com/docs/drivers/references/api/v1/partners-me-get)
+
+### Get Driver Payments
+
+```php
+$profile = $client->getDriverPayments();
+```
+
+[https://developer.uber.com/docs/drivers/references/api/v1/partners-payments-get](https://developer.uber.com/docs/drivers/references/api/v1/partners-payments-get)
+
+### Get Driver Trips
+
+```php
+$profile = $client->getDriverTrips();
+```
+
+[https://developer.uber.com/docs/drivers/references/api/v1/partners-trips-get](https://developer.uber.com/docs/drivers/references/api/v1/partners-trips-get)
+
 ### Rate Limiting
 
 > This feature is only supported for `v1` version of the API.

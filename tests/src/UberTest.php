@@ -377,6 +377,70 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $requestEstimate = $this->client->getRequestEstimate($params);
     }
 
+    public function testGetDriverProfile()
+    {
+        $this->client->setVersion('v1.1');
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"driver_id": "8LvWuRAq2511gmr8EMkovekFNa2848lyMaQevIto-aXmnK9oKNRtfTxYLgPq9OSt8EzAu5pDB7XiaQIrcp-zXgOA5EyK4h00U6D1o7aZpXIQah--U77Eh7LEBiksj2rahB==","first_name": "Uber","last_name": "Tester","email": "uber.developer+tester@example.com","phone_number": "+15555550001","picture": "https://d1w2poirtb3as9.cloudfront.net/16ce502f4767f17b120e.png","promo_code": "ubert4544ue","rating": 5,"activation_status": "active"}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/partners/me'), ['headers' => $this->client->getHeaders()])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $history = $this->client->getDriverProfile();
+    }
+
+    public function testGetDriverPayments()
+    {
+        $params = [
+            'limit' => 1,
+            'offset' => 1
+        ];
+
+        $this->client->setVersion('v1.1');
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"count": 1200,"limit": 1,"payments": [{"payment_id": "5cb8304c-f3f0-4a46-b6e3-b55e020750d7","category": "fare","event_time": 1502842757,"trip_id": "5cb8304c-f3f0-4a46-b6e3-b55e020750d7","cash_collected": 0,"amount": 3.12,"driver_id": "8LvWuRAq2511gmr8EMkovekFNa2848lyMaQevIto-aXmnK9oKNRtfTxYLgPq9OSt8EzAu5pDB7XiaQIrcp-zXgOA5EyK4h00U6D1o7aZpXIQah--U77Eh7LEBiksj2rahB==","breakdown": {"other": 4.16,"toll": 1,"service_fee": -1.04},"rider_fees": {"split_fare": 0.50},"partner_id": "8LvWuRAq2511gmr8EMkovekFNa2848lyMaQevIto-aXmnK9oKNRtfTxYLgPq9OSt8EzAu5pDB7XiaQIrcp-zXgOA5EyK4h00U6D1o7aZpXIQah--U77Eh7LEBiksj2rahB==","currency_code": "USD"}],"offset": 0}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/partners/payments'), ['headers' => $this->client->getHeaders(), 'query' => $params])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $history = $this->client->getDriverPayments($params);
+    }
+
+    public function testGetDriverTrips()
+    {
+        $params = [
+            'limit' => 1,
+            'offset' => 1
+        ];
+
+        $this->client->setVersion('v1.1');
+
+        $getResponse = m::mock('GuzzleHttp\Psr7\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"count": 1200,"limit": 1,"trips": [{"fare": 6.2,"dropoff": {"timestamp": 1502844378},"vehicle_id": "0082b54a-6a5e-4f6b-b999-b0649f286381","distance": 0.37,"start_city": {"latitude": 38.3498,"display_name": "Charleston, WV","longitude": -81.6326},"status_changes": [{"status": "accepted","timestamp": 1502843899},{"status": "driver_arrived","timestamp": 1502843900},{"status": "trip_began","timestamp": 1502843903},{"status": "completed","timestamp": 1502844378}],"surge_multiplier": 1,"pickup": {"timestamp": 1502843903},"driver_id": "8LvWuRAq2511gmr8EMkovekFNa2848lyMaQevIto-aXmnK9oKNRtfTxYLgPq9OSt8EzAu5pDB7XiaQIrcp-zXgOA5EyK4h00U6D1o7aZpXIQah--U77Eh7LEBiksj2rahB==","status": "completed","duration": 475,"trip_id": "b5613b6a-fe74-4704-a637-50f8d51a8bb1","currency_code": "USD"}],"offset": 0}');
+        $getResponse->shouldReceive('getHeader')->times(3)->andReturnValues([1000, 955, strtotime("+1 day")]);
+
+        $http_client = m::mock('GuzzleHttp\Client');
+        $http_client->shouldReceive('get')
+            ->with($this->client->getUrlFromPath('/partners/trips'), ['headers' => $this->client->getHeaders(), 'query' => $params])
+            ->times(1)->andReturn($getResponse);
+
+        $this->client->setHttpClient($http_client);
+
+        $history = $this->client->getDriverTrips($params);
+    }
+
     public function testRequestRide()
     {
         $params = [
@@ -488,7 +552,7 @@ class UberTest extends \PHPUnit_Framework_TestCase
         $receipt = $this->client->getRequestReceipt($request_id);
     }
 
-    public function test_Get_Request_Map()
+    public function testGetRequestMap()
     {
         $request_id = 'mock_request_id';
 
