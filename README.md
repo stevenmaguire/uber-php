@@ -374,7 +374,10 @@ $profile = $client->getDriverProfile();
 ### Get Driver Payments
 
 ```php
-$profile = $client->getDriverPayments();
+$profile = $client->getDriverPayments(array(
+    'limit' => 50, // optional
+    'offset' => 0 // optional
+));
 ```
 
 [https://developer.uber.com/docs/drivers/references/api/v1/partners-payments-get](https://developer.uber.com/docs/drivers/references/api/v1/partners-payments-get)
@@ -382,7 +385,10 @@ $profile = $client->getDriverPayments();
 ### Get Driver Trips
 
 ```php
-$profile = $client->getDriverTrips();
+$profile = $client->getDriverTrips(array(
+    'limit' => 50, // optional
+    'offset' => 0 // optional
+));
 ```
 
 [https://developer.uber.com/docs/drivers/references/api/v1/partners-trips-get](https://developer.uber.com/docs/drivers/references/api/v1/partners-trips-get)
